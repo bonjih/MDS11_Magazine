@@ -37,18 +37,20 @@ def selenium_driver():
                               options=options)
     return driver
 
-
-def slow_scroll(driver):
-    check_height = driver.execute_script("return document.body.scrollHeight;")
-    while True:
-        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-        try:
-            wait = WebDriverWait(driver, 10)
-            wait.until(
-                lambda driver: driver.execute_script("return document.body.scrollHeight;") > check_height)
-            check_height = driver.execute_script("return document.body.scrollHeight;")
-        except TimeoutException:
-            break
+try:
+    def slow_scroll(driver):
+        check_height = driver.execute_script("return document.body.scrollHeight;")
+        while True:
+            driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+            try:
+                wait = WebDriverWait(driver, 10)
+                wait.until(
+                    lambda driver: driver.execute_script("return document.body.scrollHeight;") > check_height)
+                check_height = driver.execute_script("return document.body.scrollHeight;")
+            except TimeoutException:
+                break
+except TypeError as e:
+    print(e)
 
 
 def check_path_exists(driver, path):
@@ -229,7 +231,7 @@ class Helper(object):
                         slow_scroll(self.driver)
                     else:
                         slow_scroll(self.driver)
-                        #dummy.send_keys(Keys.PAGE_DOWN)
+                        dummy.send_keys(Keys.PAGE_DOWN) # trying bage down and slow scroll
                         randdelay(1, 2)
                         threshold -= 1
 

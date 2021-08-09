@@ -6,6 +6,7 @@ import pandas as pd
 
 
 def db_connect(db_cred):
+    global cursor, conn
     db_creds = []
 
     for keys, values in db_cred.items():
@@ -44,8 +45,30 @@ def create_datetime():
     return date_time
 
 
+# query image links
+def get_image_from_db(db_cred):
+    cursor, conn = db_connect(db_cred)
+    cursor.execute('SELECT img_url FROM image_data')
+    numrows = cursor.rowcount
+    img_urls = cursor.fetchmany(numrows)  # can return all links or one and call the db every time
+    img_url_list = [item for list2 in img_urls for item in list2]
+    return img_url_list
+
+
 def data_roi(img_blob):
-    pass
+
+    # URL images ids are added to table 'cropped_images' using a trigger
+    # create trigger 'add_url_id_to_cropped_images' after update on 'image_data'
+    # FOR EACH ROW
+    # INSERT INTO cropped_images(img_url_id) VALUES(new.img_url_id)
+    datetime = create_datetime()
+
+    cursor.execute(
+        "INSERT INTO cropped_images (cropped_img, datatime_img_cropped)"
+        "VALUES(%s, %s)", (img_blob, datetime))
+
+    conn.commit()
+    print('added cropped image')
 
 
 def get_nlp_data(db_cred):
@@ -71,15 +94,9 @@ def data_to_db_nlp(fname, lname, db_cred):
         "VALUES(%s, %s, %s)", (fname, lname, datetime))
 
     conn.commit()
-# def get_mag_name_id(mag_names, db_cred):
-#     cursor, conn = db_connect(db_cred)
-#     mag_names = mag_names[0]
-#     # add data to metadata table
-#     cursor.execute("SELECT mag_name_id FROM publisher WHERE mag_name = %s", [mag_names])
-#     m_name_id = cursor.fetchone()
-#     return m_name_id
 
 
+# TODO combine social and main into a single function
 def data_to_db_social(im_url, s_type, mag_names, db_cred):
     print(mag_names)
     cursor, conn = db_connect(db_cred)
@@ -133,17 +150,24 @@ def data_to_db_main(matches_img_urls, mag_names, owners, credited, metadatas, ho
             m_name_id = cursor.fetchone()
 
             date_time = create_datetime()
-            #url_id = create_img_url_id(m_name_id)
+            url_id = create_img_url_id(m_name_id)
 
             cursor.execute(
-                "INSERT INTO image_data (mag_name_id, img_caption, img_credited, img_url, img_page_url, article_created_data, article_name, datatime_img_url_scrapped)"
-                "VALUES(%s, %s, %s, %s, %s, %s, %s, %s)",
-                (m_name_id, metadata, credit, matches_img_url, img_page_urls, art_date, art_title, date_time))
+                "INSERT INTO image_data (mag_name_id, img_url_id, img_caption, img_credited, img_url, img_page_url, "
+                "article_created_data, article_name, datatime_img_url_scrapped) "
+                "VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                (m_name_id, url_id, metadata, credit, matches_img_url, img_page_urls, art_date, art_title, date_time))
+            #conn.commit()
 
-            #  select image urls from metadata, add to image table
+            #  select image url from image_data, add resulting BLOB to images table
             cursor.execute('SELECT img_url FROM image_data WHERE mag_name_id = %s', [m_name_id])
             im_url = cursor.fetchone()
             im_url = im_url[0]
+
+            # URL images ids are added to table 'nlp_image_meta' using a trigger
+            # create trigger 'add_url_id_to_img' after update on 'image_data'
+            # FOR EACH ROW
+            # INSERT INTO images(img_url_id) VALUES(new.img_url_id)
 
             image_page = requests.get(im_url)
             if image_page.status_code == 200:

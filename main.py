@@ -1,17 +1,18 @@
 import json
 from concurrent.futures import ThreadPoolExecutor
-
 from selenium.common.exceptions import TimeoutException
 
 import get_main_site_img
 import get_main_site_bauer
 import get_main_site_media
-#import cv_processing_crop
+import cv_processing_crop
 import get_social_img
 import nlp_search
 
 
-# gets credentials for social media sites, should be called from a db, no json
+# TODO gets credentials for social media sites, should be called from a db, no json
+# TODO the site type, twitter etc, should be a separate table in the db (not the json)
+# TODO facebook scrape needs work, chrome freezes
 # json for testing only
 def cred_json_parser():
     with open('config_options.json', 'r') as jsonFile1:
@@ -41,18 +42,20 @@ if __name__ == "__main__":  # only executes if imported as main file
 
     try:
         # add scrape calls here
+        # multithread all scrapes
         run_io_tasks_in_parallel([
-             lambda: get_main_site_bauer.main(creds, db_creds),
+             #lambda: get_main_site_bauer.main(creds, db_creds),
             # lambda: get_main_site_media.main(creds, db_creds),
-           # lambda: get_social_img.call_facebook(creds, db_creds),
+           #lambda: get_social_img.call_facebook(creds, db_creds),
             #lambda: get_social_img.call_pinterest(creds, db_creds),
             #lambda: get_social_img.call_instagram(creds, db_creds),
             #lambda: get_social_img.call_twitter(creds, db_creds),
         ])
 
+        # CV and NLP processing
+        cv_processing_crop.main(db_creds)
+        #nlp_search.main(db_creds)
+
     except TimeoutException as e:
         print("Wait timeout, check 'WebDriverWait(driver, n)' in Class Helper. Error: {}".format(e))
         pass
-
-    #cv_processing_crop.main(db_creds)
-    #nlp_search.main(db_creds)
