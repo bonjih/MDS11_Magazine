@@ -17,15 +17,7 @@ import numpy as np
 import pymysql
 import requests
 
-from db_manager import data_roi, get_image_from_db
-
-
-# convert to binary for db insert
-def convert_to_binary(img_name):
-    with open(img_name, 'rb') as file:
-        binary_data = file.read()
-    #img_blob = cv2.imencode('.JPEG', img_name) # to view image
-    data_roi(binary_data)  # to db manager
+from db_manager import data_roi_cv, get_image_from_db_cv
 
 
 def image_preprocess(image):
@@ -57,16 +49,14 @@ def get_roi(dilation_image, image):  # InputOutputArray only required for develo
         if bound_area >= 1400 and contour_area >= 3.5:
             roi = image[y:y + h, x:x + w]
             # cv2.imwrite('img_{}.png'.format(roi_number), roi)
-            # add image names during insert
-            data_roi(roi)
-            #convert_to_binary(roi)  # convert to binary before db insert
+            data_roi_cv(roi)  # to db manager
             roi_number += 1
     return roi_number
 
 
 def main(db_cred):
 
-    img_urls = get_image_from_db(db_cred)
+    img_urls = get_image_from_db_cv(db_cred)
 
     for img_url in img_urls:
         resp_url = requests.get(img_url)

@@ -30,6 +30,17 @@ def check_entry_exist(entry, exits):
         return False
 
 
+# query image for reverse search links
+def get_image_from_db_reverse(db_cred):
+    cursor, conn = db_connect(db_cred)
+    cursor.execute('SELECT cropped_img FROM cropped_images')
+    numrows = cursor.rowcount
+    img_urls = cursor.fetchmany(numrows)  # can return all links or one and call the db every time
+    cropped_image_list = [item for list2 in img_urls for item in list2]
+    return cropped_image_list
+
+
+
 # create img_url_id
 # should create a db trigger and concat img_metadata_id and mag_name_id
 def create_img_url_id(m_name_id):
@@ -46,7 +57,7 @@ def create_datetime():
 
 
 # query image links
-def get_image_from_db(db_cred):
+def get_image_from_db_cv(db_cred):
     cursor, conn = db_connect(db_cred)
     cursor.execute('SELECT img_url FROM image_data')
     numrows = cursor.rowcount
@@ -55,7 +66,7 @@ def get_image_from_db(db_cred):
     return img_url_list
 
 
-def data_roi(img_blob):
+def data_roi_cv(img_blob):
 
     # URL images ids are added to table 'cropped_images' using a trigger
     # create trigger 'add_url_id_to_cropped_images' after update on 'image_data'
