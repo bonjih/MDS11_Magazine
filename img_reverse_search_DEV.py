@@ -9,10 +9,10 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 
 
-# Define the Chrome Driver options
 from db_manager import get_image_from_db_reverse
 
 
+# Define the Chrome Driver options
 def selenium_driver():
     options = webdriver.ChromeOptions()
     options.add_argument('--disable-blink-features=AutomationControlled')
@@ -34,7 +34,7 @@ def selenium_driver():
     return driver
 
 
-def search_Google(img_files):
+def search_google(img_files):
     # Read and import the CSV containing unique image file directories created by "get_img_files.py"
     # img_paths = pd.read_csv('img_paths.csv')
 
