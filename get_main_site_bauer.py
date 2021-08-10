@@ -15,15 +15,15 @@ from db_manager import data_to_db_main
 startTime = datetime.now()
 
 
-def fake_ua():
-    ua = UserAgent()
-    header = {'User-Agent': str(ua.random)}
-    return header
+# def fake_ua():
+#     ua = UserAgent()
+#     header = {'User-Agent': str(ua.random)}
+#     return header
 
 
 # for Vogue, request additional options and also edit the cdc_ to avoid 403 errors
 def selenium_driver():
-    header = fake_ua()
+    #header = fake_ua()
     # option to help to only login once
     options = webdriver.ChromeOptions()
     options.add_argument(
@@ -34,7 +34,7 @@ def selenium_driver():
     options.add_experimental_option("excludeSwitches", ["enable-automation"])
     options.add_argument("--headless")
     options.add_argument("--no-sandbox")
-    options.add_argument(str(header))
+    #options.add_argument(str(header))
 
     # enable browser logging
     d = DesiredCapabilities.CHROME

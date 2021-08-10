@@ -1,12 +1,8 @@
-import binascii
-import io
 import random
 from datetime import datetime
 import pymysql
 import requests
 import pandas as pd
-import numpy as np
-import cv2
 
 
 def db_connect(db_cred):

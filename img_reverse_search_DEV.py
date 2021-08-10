@@ -180,8 +180,8 @@ def main(db_cred):
         try:
             os.remove(file_name)
         except PermissionError as e:
-            time.sleep(5)
-
+            time.sleep(5)  # need to test wait time, depends on time to load image
+            os.remove(file_name)
 
 
     #data_tineye = search_Tineye(image_id['Img_Directory'])
