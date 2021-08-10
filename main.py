@@ -2,13 +2,12 @@ import json
 from concurrent.futures import ThreadPoolExecutor
 from selenium.common.exceptions import TimeoutException
 
-import get_main_site_img
 import get_main_site_bauer
-import get_main_site_media
+#import get_main_site_media
 import cv_processing_crop
 import get_social_img
 import nlp_search
-import img_reverse_search
+import img_reverse_search_DEV
 
 
 # TODO gets credentials for social media sites, should be called from a db, no json
@@ -54,9 +53,9 @@ if __name__ == "__main__":  # only executes if imported as main file
         ])
 
         # CV and NLP processing
-        cv_processing_crop.main(db_creds)
+        #cv_processing_crop.main(db_creds)
         #nlp_search.main(db_creds)
-        img_reverse_search.main(db_creds)
+        img_reverse_search_DEV.main(db_creds)
     
     except TimeoutException as e:
         print("Wait timeout, check 'WebDriverWait(driver, n)' in Class Helper. Error: {}".format(e))

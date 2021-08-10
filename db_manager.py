@@ -1,8 +1,12 @@
+import binascii
+import io
 import random
 from datetime import datetime
 import pymysql
 import requests
 import pandas as pd
+import numpy as np
+import cv2
 
 
 def db_connect(db_cred):
@@ -35,10 +39,15 @@ def get_image_from_db_reverse(db_cred):
     cursor, conn = db_connect(db_cred)
     cursor.execute('SELECT cropped_img FROM cropped_images')
     numrows = cursor.rowcount
-    img_urls = cursor.fetchmany(numrows)  # can return all links or one and call the db every time
-    cropped_image_list = [item for list2 in img_urls for item in list2]
-    return cropped_image_list
-
+    img_bytes = cursor.fetchmany(numrows)  # can return all links or one and call the db every time
+    img_bytes = img_bytes[0][0]
+    #for i in img_bytes:
+    nparr = np.fromstring(img_bytes, np.uint8)
+    img_array = np.asarray(bytearray(nparr), dtype=np.uint8)
+    img = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
+    cv2.imshow('test', img)
+    cv2.waitKey(0)
+    return img
 
 
 # create img_url_id
@@ -67,11 +76,11 @@ def get_image_from_db_cv(db_cred):
 
 
 def data_roi_cv(img_blob):
-
     # URL images ids are added to table 'cropped_images' using a trigger
     # create trigger 'add_url_id_to_cropped_images' after update on 'image_data'
     # FOR EACH ROW
     # INSERT INTO cropped_images(img_url_id) VALUES(new.img_url_id)
+
     datetime = create_datetime()
 
     cursor.execute(
@@ -168,7 +177,7 @@ def data_to_db_main(matches_img_urls, mag_names, owners, credited, metadatas, ho
                 "article_created_data, article_name, datatime_img_url_scrapped) "
                 "VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)",
                 (m_name_id, url_id, metadata, credit, matches_img_url, img_page_urls, art_date, art_title, date_time))
-            #conn.commit()
+            # conn.commit()
 
             #  select image url from image_data, add resulting BLOB to images table
             cursor.execute('SELECT img_url FROM image_data WHERE mag_name_id = %s', [m_name_id])

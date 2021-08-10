@@ -14,10 +14,15 @@
 
 import cv2
 import numpy as np
-import pymysql
 import requests
 
 from db_manager import data_roi_cv, get_image_from_db_cv
+
+
+# convert to binary for db insert
+def convert_to_binary(img_name):
+    img_str = cv2.imencode('.jpg', img_name).tobytes()
+    data_roi_cv(img_str)  # to db manager
 
 
 def image_preprocess(image):
@@ -49,7 +54,8 @@ def get_roi(dilation_image, image):  # InputOutputArray only required for develo
         if bound_area >= 1400 and contour_area >= 3.5:
             roi = image[y:y + h, x:x + w]
             # cv2.imwrite('img_{}.png'.format(roi_number), roi)
-            data_roi_cv(roi)  # to db manager
+            convert_to_binary(roi)
+            #data_roi_cv(roi)  # to db manager
             roi_number += 1
     return roi_number
 

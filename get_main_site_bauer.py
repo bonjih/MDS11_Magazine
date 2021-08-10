@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver import DesiredCapabilities
-from fake_useragent import UserAgent
+#from fake_useragent import UserAgent
 from datetime import datetime
 
 from process_config_json import get_configs_main
