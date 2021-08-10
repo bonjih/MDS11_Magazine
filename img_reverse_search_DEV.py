@@ -2,9 +2,9 @@ import glob
 import os
 import pathlib
 import time
-
 import cv2
 import pandas as pd
+import numpy as np
 from bs4 import BeautifulSoup
 from selenium import webdriver
 
@@ -32,89 +32,6 @@ def selenium_driver():
     driver = webdriver.Chrome(executable_path=r'C:/seleniumChromeDriver/chromedriver_win32/chromedriver.exe',
                               options=options)
     return driver
-
-# Function to get image directory file names
-def get_img_files(img_folder):
-    # Walk through each folder and sub-folder
-    for subdir, dirs, files in os.walk(img_folder):
-        # Initialise list for filepath names
-        filepath = []
-        for filename in files:
-            f = subdir + os.sep + filename
-            # Append names of files ending with .jpg or .png
-            if f.endswith(".jpg") or f.endswith(".png"):
-                filepath.append(f)
-
-    # Store into dataframe for csv output
-    #df = pd.DataFrame(filepath, columns=['Img_Directory'])
-    #return df
-
-
-# Tineye web-scraping function
-def search_tineye(img_files):
-    # Setup Chrome driver
-    driver = selenium_driver()
-    # Initialise empty dictionary for data storage and CSV output
-    tin_dict = {'Img_Directory': [],
-                'num_res': [],
-                'tineye_filename': [],
-                'tin_text': []}
-
-    # Iterate through each image file directory
-    for i in img_files:
-        img_i = str(i)
-        # Store unique image directory filename to output csv
-        tin_dict['Img_Directory'].append([img_i])
-        record_match_all = []
-        record_match_filename = []
-        try:
-            # Open the website
-            driver.get('https://tineye.com/')
-            time.sleep(2)
-            # Find Image Upload Box
-            upload_btn = driver.find_element_by_id("upload_box")
-            time.sleep(3)
-            # Upload each (for i) image from directory
-            upload_btn.send_keys(i)
-            time.sleep(5)
-            content = driver.page_source
-            soup = BeautifulSoup(content, 'html.parser')
-
-            # If 'number of results' return is None, then append "none" to all,else continue with the scrape
-            if soup.find('span', {"id": "result_count"}) is None:
-                tin_dict['num_res'].append([None])
-                record_match_all.append(None)
-                record_match_filename.append(None)
-            else:
-                # Find the number of results returned
-                result_count = soup.find('span', {"id": "result_count"}).string
-                tin_dict['num_res'].append([result_count])
-
-                # scrape all text for each 'match' returned
-                # each match is contained within an array stored into "record_match_all" and then "tin_text"
-                soup_match = soup.find_all('div', {"class": "match"})
-                for match in soup_match:
-                    record_match_all.append([match.get_text(strip=True)])
-
-                # identify specifically "filename" found in each match as this may be most useful
-                soup_match_filename = soup.find_all('a', {"class": "truncate"})
-                for filename in soup_match_filename:
-                    record_match_filename.append([filename.get_text(strip=True)])
-
-            # append scraped text to output dictionary for CSV export
-            tin_dict['tin_text'].append([record_match_all])
-            tin_dict['tineye_filename'].append([record_match_filename])
-        except Exception as e:
-            print(e)
-    driver.quit()
-
-    # Output the dictionary as a CSV of Tineye Scraped text
-    tin_df = pd.DataFrame.from_dict(tin_dict, orient='index')
-    tin_df2 = tin_df.transpose()
-    tin_df2 = pd.DataFrame(tin_df2, columns=['Img_Directory', 'num_res', 'tineye_filename', 'tin_text'])
-
-    return tin_df2
-    # pd.DataFrame(tin_df2).to_csv("tineye_dict_data.csv")
 
 
 def search_Google(img_files):
@@ -186,20 +103,8 @@ def search_Google(img_files):
     # google_df.to_csv("google_df.csv", index=False)
 
 
-# write img to a temp dir for processing and then remove
-def write_temp_img(img_tineye_list):
-    cv2.imwrite('name.jpg', img_tineye_list)
-    image_path = '.'
-    list_of_files = glob.glob(r'*.{}'.format('jpg'))
-
-    for file_path in list_of_files:
-        path_to_img = pathlib.Path(image_path)
-        abs_path = path_to_img.absolute()
-        file_name = file_path
-        return abs_path, file_name
-
-
-def upload_test(driver, abs_path, file_name):
+# Tineye web-scraping function
+def search_tineye(driver, abs_path, file_name):
 
     # Initialise empty dictionary for data storage and CSV output
     tin_dict = {'Img_Directory': [],
@@ -245,17 +150,37 @@ def upload_test(driver, abs_path, file_name):
     return tin_df2
 
 
+# write img to a temp dir for processing and then remove
+def write_temp_img(img_url_id, image):
+    cv2.imwrite('img_{}.jpg'.format(img_url_id), image)
+    image_path = '.'
+    list_of_files = glob.glob(r'*.{}'.format('jpg'))
+
+    for file_path in list_of_files:
+        path_to_img = pathlib.Path(image_path)
+        abs_path = path_to_img.absolute()
+        file_name = file_path
+        print(file_name)
+        return abs_path, file_name
+
+
 def main(db_cred):
     driver = selenium_driver()
-    for i in get_image_from_db_reverse(db_cred):
-        abs_path, file_name = write_temp_img(i)
-        upload_test(driver, abs_path, file_name)
-
-
-
-
-
-
+    img_bytes = get_image_from_db_reverse(db_cred)
+    for i in img_bytes:
+        img_url_ids = i[0]
+        cropped_imgs = i[1]
+        nparr = np.fromstring(cropped_imgs, np.uint8)
+        img_array = np.asarray(bytearray(nparr), dtype=np.uint8)
+        img = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
+        # cv2.imshow('test', img)
+        # cv2.waitKey(0)
+        abs_path, file_name = write_temp_img(img_url_ids, img)
+        search_tineye(driver, abs_path, file_name)
+        try:
+            os.remove(file_name)
+        except PermissionError as e:
+            time.sleep(5)
 
 
 

@@ -37,17 +37,9 @@ def check_entry_exist(entry, exits):
 # query image for reverse search links
 def get_image_from_db_reverse(db_cred):
     cursor, conn = db_connect(db_cred)
-    cursor.execute('SELECT cropped_img FROM cropped_images')
-    numrows = cursor.rowcount
-    img_bytes = cursor.fetchmany(numrows)  # can return all links or one and call the db every time
-    img_bytes = img_bytes[0][0]
-    #for i in img_bytes:
-    nparr = np.fromstring(img_bytes, np.uint8)
-    img_array = np.asarray(bytearray(nparr), dtype=np.uint8)
-    img = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
-    cv2.imshow('test', img)
-    cv2.waitKey(0)
-    return img
+    cursor.execute('SELECT img_url_id, cropped_img FROM cropped_images')
+    img_bytes = cursor.fetchall()  # can return all links or one and call the db every time
+    return img_bytes
 
 
 # create img_url_id

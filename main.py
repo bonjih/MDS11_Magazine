@@ -1,6 +1,7 @@
 import json
 from concurrent.futures import ThreadPoolExecutor
 from selenium.common.exceptions import TimeoutException
+import pymysql
 
 import get_main_site_bauer
 #import get_main_site_media
@@ -59,4 +60,7 @@ if __name__ == "__main__":  # only executes if imported as main file
     
     except TimeoutException as e:
         print("Wait timeout, check 'WebDriverWait(driver, n)' in Class Helper. Error: {}".format(e))
-        pass
+    except pymysql.OperationalError as e:
+        print('No connection to database. Please check connection details in config.json: {}'.format(e))
+    except pymysql.DataError as e:
+        print('Data too long, check variable length in database : {}'.format(e))

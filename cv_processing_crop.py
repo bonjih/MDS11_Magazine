@@ -21,7 +21,7 @@ from db_manager import data_roi_cv, get_image_from_db_cv
 
 # convert to binary for db insert
 def convert_to_binary(img_name):
-    img_str = cv2.imencode('.jpg', img_name).tobytes()
+    img_str = cv2.imencode('.jpg', img_name)[1].tobytes()
     data_roi_cv(img_str)  # to db manager
 
 
