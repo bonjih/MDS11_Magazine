@@ -1,0 +1,424 @@
+{
+
+	"belle": {
+
+		"main_site": {
+			"url": "https://www.homestolove.com.au/belle/",
+			"owner": "bauer",
+			"mag_name" : "belle",
+			"first_name": "",
+			"second_name": "",
+			"email": "",
+			"user": "",
+			"pswrd": "",
+			"dob": "",
+			"s_type": "main_site"
+		},
+		"facebook": {
+			"url": "https://www.facebook.com/BelleMagazineAu/photos/?ref=page_internal",
+			"owner": "bauer",
+			"mag_name" : "belle",
+			"first_name": "jcu",
+			"second_name": "cook",
+			"email": "ben.hamilton@my.jcu.edu.au",
+			"user": "ben.hamilton@my.jcu.edu.au",
+			"pswrd": "jcuMDS11_2021!",
+			"dob": "08071980",
+			"s_type": "facebook"
+		},
+		"pinterest": {
+			"url": "https://www.pinterest.com.au/bellemagazineau/",
+			"owner": "bauer",
+			"mag_name" : "belle",
+			"first_name": "jcu",
+			"second_name": "cook",
+			"email": "ben.hamilton@my.jcu.edu.au",
+			"user": "ben.hamilton@my.jcu.edu.au",
+			"pswrd": "jcuMDS11_2021!",
+			"dob": "08071980",
+			"s_type": "pinterest"
+		},
+		"instagram": {
+			"url": "https://www.instagram.com/bellemagazineau/?hl=en",
+			"owner": "bauer",
+			"mag_name" : "belle",
+			"first_name": "jcu",
+			"second_name": "cook",
+			"email": "ben.hamilton@my.jcu.edu.au",
+			"user": "jcuCook21",
+			"pswrd": "jcuMDS11_2021!",
+			"dob": "08071980",
+			"s_type": "instagram"
+		},
+		"twitter": {
+			"url": "https://twitter.com/BelleMagazineAu/media?lang=en",
+			"owner": "bauer",
+			"mag_name" : "belle",
+			"first_name": "jcu",
+			"second_name": "cook",
+			"email": "ben.hamilton@my.jcu.edu.au",
+			"user": "benhamiltonmyj1",
+			"pswrd": "jcuMDS11_2021!",
+			"dob": "08071980",
+			"s_type": "twitter"
+		}
+	},
+	"real_living": {
+		"main_site": {
+			"url": "https://www.homestolove.com.au/real-living",
+			"owner": "bauer",
+			"mag_name" : "real_living",
+			"first_name": "",
+			"second_name": "",
+			"email": "",
+			"user": "",
+			"pswrd": "",
+			"dob": "",
+			"s_type": "main_site"
+		},
+		"facebook": {
+			"url": "https://www.facebook.com/reallivingmagazine/photos/?ref=page_internal",
+			"owner": "bauer",
+			"mag_name" : "real_living",
+			"first_name": "jcu",
+			"second_name": "cook",
+			"email": "ben.hamilton@my.jcu.edu.au",
+			"user": "ben.hamilton@my.jcu.edu.au",
+			"pswrd": "jcuMDS11_2021!",
+			"dob": "08071980",
+			"s_type": "facebook"
+		},
+		"pinterest": {
+			"url": "https://www.pinterest.com.au/reallivingmag/",
+			"owner": "bauer",
+			"mag_name" : "real_living",
+			"first_name": "jcu",
+			"second_name": "cook",
+			"email": "ben.hamilton@my.jcu.edu.au",
+			"user": "ben.hamilton@my.jcu.edu.au",
+			"pswrd": "jcuMDS11_2021!",
+			"dob": "08071980",
+			"s_type": "pinterest"
+		},
+		"instagram": {
+			"url": "https://www.instagram.com/reallivingmag/?hl=en",
+			"owner": "bauer",
+			"mag_name" : "real_living",
+			"first_name": "jcu",
+			"second_name": "cook",
+			"email": "ben.hamilton@my.jcu.edu.au",
+			"user": "jcuCook21",
+			"pswrd": "jcuMDS11_2021!",
+			"dob": "08071980",
+			"s_type": "instagram"
+		},
+		"twitter": {
+			"url": "https://twitter.com/reallivingmag/media?lang=e",
+			"owner": "bauer",
+			"mag_name" : "real_living",
+			"first_name": "jcu",
+			"second_name": "cook",
+			"email": "ben.hamilton@my.jcu.edu.au",
+			"user": "benhamiltonmyj1",
+			"pswrd": "jcuMDS11_2021!",
+			"dob": "08071980",
+			"s_type": "twitter"
+		}
+	},
+	"aust_house_garden": {
+		"main_site": {
+			"url": "https://www.homestolove.com.au/australian-house-and-garden",
+			"owner": "bauer",
+			"mag_name" : "aust_house_garden",
+			"first_name": "",
+			"second_name": "",
+			"email": "",
+			"user": "",
+			"pswrd": "",
+			"dob": "",
+			"s_type": "main_site"
+		},
+		"facebook": {
+			"url": "https://www.facebook.com/australianhouseandgarden/photos/?ref=page_internal",
+			"owner": "bauer",
+			"mag_name" : "aust_house_garden",
+			"first_name": "jcu",
+			"second_name": "cook",
+			"email": "ben.hamilton@my.jcu.edu.au",
+			"user": "ben.hamilton@my.jcu.edu.au",
+			"pswrd": "jcuMDS11_2021!",
+			"dob": "08071980",
+			"s_type": "facebook"
+		},
+		"pinterest": {
+			"url": "https://www.pinterest.com.au/houseandgardenau/",
+			"owner": "bauer",
+			"mag_name" : "aust_house_garden",
+			"first_name": "jcu",
+			"second_name": "cook",
+			"email": "ben.hamilton@my.jcu.edu.au",
+			"user": "ben.hamilton@my.jcu.edu.au",
+			"pswrd": "jcuMDS11_2021!",
+			"dob": "08071980",
+			"s_type": "pinterest"
+		},
+		"instagram": {
+			"url": "https://www.instagram.com/houseandgarden/?hl=en",
+			"owner": "bauer",
+			"mag_name" : "aust_house_garden",
+			"first_name": "jcu",
+			"second_name": "cook",
+			"email": "ben.hamilton@my.jcu.edu.au",
+			"user": "jcuCook21",
+			"pswrd": "jcuMDS11_2021!",
+			"dob": "08071980",
+			"s_type": "instagram"
+		},
+		"twitter": {
+			"url": "https://twitter.com/_houseandgarden/media?lang=en",
+			"owner": "bauer",
+			"mag_name" : "aust_house_garden",
+			"first_name": "jcu",
+			"second_name": "cook",
+			"email": "ben.hamilton@my.jcu.edu.au",
+			"user": "benhamiltonmyj1",
+			"pswrd": "jcuMDS11_2021!",
+			"dob": "08071980",
+			"s_type": "twitter"
+		}
+	},
+	"country_style": {
+		"main_site": {
+			"url": "https://www.homestolove.com.au/country-style",
+			"owner": "bauer",
+			"mag_name" : "country_style",
+			"first_name": "",
+			"second_name": "",
+			"email": "",
+			"user": "",
+			"pswrd": "",
+			"dob": "",
+			"s_type": "main_site"
+		},
+		"facebook": {
+			"url": "https://www.facebook.com/CountryStyleMagazine/photos/?ref=page_internal",
+			"owner": "bauer",
+			"mag_name" : "country_style",
+			"first_name": "jcu",
+			"second_name": "cook",
+			"email": "ben.hamilton@my.jcu.edu.au",
+			"user": "ben.hamilton@my.jcu.edu.au",
+			"pswrd": "jcuMDS11_2021!",
+			"dob": "08071980",
+			"s_type": "facebook"
+		},
+		"pinterest": {
+			"url": "https://www.pinterest.com.au/countrystylemag/",
+			"owner": "bauer",
+			"mag_name" : "country_style",
+			"first_name": "jcu",
+			"second_name": "cook",
+			"email": "ben.hamilton@my.jcu.edu.au",
+			"user": "ben.hamilton@my.jcu.edu.au",
+			"pswrd": "jcuMDS11_2021!",
+			"dob": "08071980",
+			"s_type": "pinterest"
+		},
+		"instagram": {
+			"url": "https://www.instagram.com/countrystylemag/?hl=en",
+			"owner": "bauer",
+			"mag_name" : "country_style",
+			"first_name": "jcu",
+			"second_name": "cook",
+			"email": "ben.hamilton@my.jcu.edu.au",
+			"user": "jcuCook21",
+			"pswrd": "jcuMDS11_2021!",
+			"dob": "08071980",
+			"s_type": "instagram"
+		},
+		"twitter": {
+			"url": "https://twitter.com/CountryStyleCDN/media?lang=en",
+			"owner": "bauer",
+			"mag_name" : "country_style",
+			"first_name": "jcu",
+			"second_name": "cook",
+			"email": "ben.hamilton@my.jcu.edu.au",
+			"user": "benhamiltonmyj1",
+			"pswrd": "jcuMDS11_2021!",
+			"dob": "08071980",
+			"s_type": "twitter"
+		}
+	},
+	"vogue_living": {
+		"main_site": {
+			"url": "https://www.vogue.com.au/vogue-living",
+			"owner": "news_life_media",
+			"mag_name" : "vogue_living",
+			"first_name": "",
+			"second_name": "",
+			"email": "",
+			"user": "",
+			"pswrd": "",
+			"dob": "",
+			"s_type": "main_site"
+		},
+		"facebook": {
+			"url": "https://www.facebook.com/vogueliving/photos/?ref=page_internal",
+			"owner": "news_life_media",
+			"mag_name" : "vogue_living",
+			"first_name": "jcu",
+			"second_name": "cook",
+			"email": "ben.hamilton@my.jcu.edu.au",
+			"user": "ben.hamilton@my.jcu.edu.au",
+			"pswrd": "jcuMDS11_2021!",
+			"dob": "08071980",
+			"s_type": "facebook"
+		},
+		"pinterest": {
+			"url": "https://www.pinterest.com.au/vogueliving/",
+			"owner": "news_life_media",
+			"mag_name" : "vogue_living",
+			"first_name": "jcu",
+			"second_name": "cook",
+			"email": "ben.hamilton@my.jcu.edu.au",
+			"user": "ben.hamilton@my.jcu.edu.au",
+			"pswrd": "jcuMDS11_2021!",
+			"dob": "08071980",
+			"s_type": "pinterest"
+		},
+		"instagram": {
+			"url": "https://www.instagram.com/vogueliving/",
+			"owner": "news_life_media",
+			"mag_name" : "vogue_living",
+			"first_name": "jcu",
+			"second_name": "cook",
+			"email": "ben.hamilton@my.jcu.edu.au",
+			"user": "jcuCook21",
+			"pswrd": "jcuMDS11_2021!",
+			"dob": "08071980",
+			"s_type": "instagram"
+		},
+		"twitter": {
+			"url": "https://twitter.com/VogueLiving/media",
+			"owner": "news_life_media",
+			"mag_name" : "vogue_living",
+			"first_name": "jcu",
+			"second_name": "cook",
+			"email": "ben.hamilton@my.jcu.edu.au",
+			"user": "benhamiltonmyj1",
+			"pswrd": "jcuMDS11_2021!",
+			"dob": "08071980",
+			"s_type": "twitter"
+		},
+		"tumblr": {
+			"url": "https://voguelivingmagazine.tumblr.com/",
+			"owner": "news_life_media",
+			"mag_name" : "vogue_living",
+			"first_name": "jcu",
+			"second_name": "cook",
+			"email": "ben.hamilton@my.jcu.edu.au",
+			"user": "jcuCook21",
+			"pswrd": "jcuMDS11_2021!",
+			"dob": "08071980",
+			"s_type": "tumblr"
+		},
+		"vogueLiving_blog": {
+			"url": "https://vogueliving.wordpress.com/",
+			"owner": "news_life_media",
+			"mag_name" : "vogue_living",
+			"first_name": "jcu",
+			"second_name": "cook",
+			"email": "ben.hamilton@my.jcu.edu.au",
+			"user": "jcuCook21",
+			"pswrd": "jcuMDS11_2021!",
+			"dob": "08071980",
+			"s_type": "vogueLiving_blog"
+		}
+	},
+	"vogue_aust": {
+		"main_site": {
+			"url": "https://www.vogue.com.au/",
+			"owner": "news_life_media",
+			"mag_name" : "vogue_aust",
+			"first_name": "",
+			"second_name": "",
+			"email": "",
+			"user": "",
+			"pswrd": "",
+			"dob": "",
+			"s_type": "main_site"
+		},
+		"facebook": {
+			"url": "https://www.facebook.com/VogueAustralia/photos/?ref=page_internal",
+			"owner": "news_life_media",
+			"mag_name" : "vogue_aust",
+			"first_name": "jcu",
+			"second_name": "cook",
+			"email": "ben.hamilton@my.jcu.edu.au",
+			"user": "ben.hamilton@my.jcu.edu.au",
+			"pswrd": "jcuMDS11_2021!",
+			"dob": "08071980",
+			"s_type": "facebook"
+		},
+		"pinterest": {
+			"url": "https://www.pinterest.com.au/vogueaustralia/",
+			"owner": "news_life_media",
+			"mag_name" : "vogue_aust",
+			"first_name": "jcu",
+			"second_name": "cook",
+			"email": "ben.hamilton@my.jcu.edu.au",
+			"user": "ben.hamilton@my.jcu.edu.au",
+			"pswrd": "jcuMDS11_2021!",
+			"dob": "08071980",
+			"s_type": "pinterest"
+		},
+		"instagram": {
+			"url": "https://www.instagram.com/vogueaustralia/",
+			"owner": "news_life_media",
+			"mag_name" : "vogue_aust",
+			"first_name": "jcu",
+			"second_name": "cook",
+			"email": "ben.hamilton@my.jcu.edu.au",
+			"user": "jcuCook21",
+			"pswrd": "jcuMDS11_2021!",
+			"dob": "08071980",
+			"s_type": "instagram"
+		},
+		"twitter": {
+			"url": "https://twitter.com/vogueaustralia/media",
+			"owner": "news_life_media",
+			"mag_name" : "vogue_aust",
+			"first_name": "jcu",
+			"second_name": "cook",
+			"email": "ben.hamilton@my.jcu.edu.au",
+			"user": "benhamiltonmyj1",
+			"pswrd": "jcuMDS11_2021!",
+			"dob": "08071980",
+			"s_type": "twitter"
+		},
+		"tumblr": {
+			"url": "https://vogueaustralia.tumblr.com/",
+			"owner": "news_life_media",
+			"mag_name" : "vogue_aust",
+			"first_name": "jcu",
+			"second_name": "cook",
+			"email": "ben.hamilton@my.jcu.edu.au",
+			"user": "jcuCook21",
+			"pswrd": "jcuMDS11_2021!",
+			"dob": "08071980",
+			"s_type": "tumblr"
+		},
+		"vogueAust_blog": {
+			"url": "http://www.vogue.com.au/blogs/",
+			"owner": "news_life_media",
+			"mag_name" : "vogue_aust",
+			"first_name": "jcu",
+			"second_name": "cook",
+			"email": "ben.hamilton@my.jcu.edu.au",
+			"user": "jcuCook21",
+			"pswrd": "jcuMDS11_2021!",
+			"dob": "08071980",
+			"s_type": "vogueAust_blog"
+		}
+	}
+}
