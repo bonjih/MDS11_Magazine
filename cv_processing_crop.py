@@ -51,7 +51,7 @@ def get_roi(dilation_image, image):  # InputOutputArray only required for develo
         x, y, w, h = cv2.boundingRect(approx)
         # Calculate area under bounding rectangle
         bound_area = w * h
-        if bound_area >= 1400 and contour_area >= 3.5:
+        if bound_area >= 14000 and contour_area >= 3.5:
             roi = image[y:y + h, x:x + w]
             # cv2.imwrite('img_{}.png'.format(roi_number), roi)
             convert_to_binary(roi)
