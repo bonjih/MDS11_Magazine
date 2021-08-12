@@ -1,4 +1,5 @@
 import json
+import time
 from concurrent.futures import ThreadPoolExecutor
 from selenium.common.exceptions import TimeoutException
 import pymysql
@@ -9,6 +10,8 @@ import cv_processing_crop
 import get_social_img
 import nlp_search
 import img_reverse_search_DEV
+import nlp_imagescrape_tineye
+
 
 
 # TODO gets credentials for social media sites, should be called from a db, no json
@@ -45,7 +48,7 @@ if __name__ == "__main__":  # only executes if imported as main file
         # add scrape calls here
         # multithread all scrapes
         run_io_tasks_in_parallel([
-             #lambda: get_main_site_bauer.main(creds, db_creds),
+             lambda: get_main_site_bauer.main(creds, db_creds),
             # lambda: get_main_site_media.main(creds, db_creds),
            #lambda: get_social_img.call_facebook(creds, db_creds),
             #lambda: get_social_img.call_pinterest(creds, db_creds),
@@ -56,7 +59,9 @@ if __name__ == "__main__":  # only executes if imported as main file
         # CV and NLP processing
         #cv_processing_crop.main(db_creds)
         #nlp_search.main(db_creds)
-        img_reverse_search_DEV.main(db_creds)
+        #img_reverse_search_DEV.main(db_creds)
+        #nlp_imagescrape_tineye.main(db_creds)
+
     
     except TimeoutException as e:
         print("Wait timeout, check 'WebDriverWait(driver, n)' in Class Helper. Error: {}".format(e))
@@ -64,3 +69,7 @@ if __name__ == "__main__":  # only executes if imported as main file
         print('No connection to database. Please check connection details in config.json: {}'.format(e))
     except pymysql.DataError as e:
         print('Data too long, check variable length in database : {}'.format(e))
+    except PermissionError as e:
+        print(e, 'oo')
+        time.sleep(15)  # need to test wait time, depends on time to load image
+
