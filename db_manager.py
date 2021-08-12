@@ -1,8 +1,12 @@
 import random
+from urllib.request import urlopen
 from datetime import datetime
+
+import cv2
 import pymysql
 import requests
 import pandas as pd
+import numpy as np
 
 
 def db_connect(db_cred):
@@ -28,6 +32,11 @@ def check_entry_exist(entry, exits):
         return True
     if entry != exits:
         return False
+
+
+# adds nlp results of tineye/google to db
+def add_nlp_reverse_search_results(db_cred):
+    pass
 
 
 # query image for reverse search links
@@ -85,6 +94,15 @@ def get_nlp_data(db_cred):
     img_caption = cursor.fetchall()
     dataset = pd.DataFrame(img_caption, columns=["URL", "Caption", "img_page_url"])
     return dataset
+
+
+# download the image, convert to a np array and read
+def url_to_image(url):
+    resp = urlopen(url)
+    image = np.asarray(bytearray(resp.read()), dtype="uint8")
+    image = cv2.imdecode(image, cv2.IMREAD_COLOR)
+    # return the image
+    return image
 
 
 def data_to_db_nlp(fname, lname, db_cred):
@@ -179,10 +197,10 @@ def data_to_db_main(matches_img_urls, mag_names, owners, credited, metadatas, ho
 
             image_page = requests.get(im_url)
             if image_page.status_code == 200:
-                response = requests.get(im_url, stream=True)
+                img_bin = url_to_image(im_url)
                 cursor.execute(
                     "INSERT INTO images (mag_name_id, site_type, image)" "VALUES(%s, %s, %s)",
-                    (m_name_id, s_type, response.raw))
+                    (m_name_id, s_type, img_bin))
 
             conn.commit()
 
