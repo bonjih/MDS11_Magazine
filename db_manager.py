@@ -40,7 +40,7 @@ def add_nlp_reverse_search_results(db_cred):
 
 
 # query image for reverse search links
-def get_image_from_db_reverse(db_cred):
+def get_image_from_db_crop(db_cred):
     cursor, conn = db_connect(db_cred)
     cursor.execute('SELECT img_url_id, cropped_img FROM cropped_images')
     img_bytes = cursor.fetchall()  # can return all links or one and call the db every time
@@ -84,14 +84,12 @@ def create_datetime():
 # query image links
 def get_image_from_db_cv(db_cred):
     cursor, conn = db_connect(db_cred)
-    cursor.execute('SELECT img_url FROM image_data')
-    numrows = cursor.rowcount
-    img_urls = cursor.fetchmany(numrows)  # can return all links or one and call the db every time
-    img_url_list = [item for list2 in img_urls for item in list2]
-    return img_url_list
+    cursor.execute('SELECT img_url_id, img_url FROM image_data')
+    img_urls = cursor.fetchall()  # can return all links or one and call the db every time
+    return img_urls
 
 
-def data_roi_cv(img_blob):
+def data_roi_cv(img_blob, img_url_id):
     # URL images ids are added to table 'cropped_images' using a trigger
     # create trigger 'add_url_id_to_cropped_images' after update on 'image_data'
     # FOR EACH ROW
@@ -100,8 +98,8 @@ def data_roi_cv(img_blob):
     datetime = create_datetime()
 
     cursor.execute(
-        "INSERT INTO cropped_images (cropped_img, datatime_img_cropped)"
-        "VALUES(%s, %s)", (img_blob, datetime))
+        "INSERT INTO cropped_images (img_url_id, cropped_img, datatime_img_cropped)"
+        "VALUES(%s, %s, %s)", (img_url_id, img_blob, datetime))
 
     conn.commit()
     print('added cropped image')

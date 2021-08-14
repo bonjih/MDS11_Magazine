@@ -8,16 +8,17 @@ import numpy as np
 from bs4 import BeautifulSoup
 from selenium import webdriver
 
-
-from db_manager import get_image_from_db_reverse
+from db_manager import get_image_from_db_crop
 
 
 # Define the Chrome Driver options
 def selenium_driver():
+
     options = webdriver.ChromeOptions()
     options.add_argument('--disable-blink-features=AutomationControlled')
     options.add_argument("--disable-extensions")
     options.add_argument("--disable-notifications")
+    options.add_argument('--proxy-server=200.116.198.148:40711')
     options.add_experimental_option('useAutomationExtension', False)
     options.add_experimental_option("excludeSwitches", ["enable-automation"])
     options.add_argument("--disable-infobars")
@@ -123,7 +124,7 @@ def search_tineye(driver, abs_path, file_name, img_url_ids):
     # Upload each (for i) image from directory
     file_path = ('{}\{}').format(abs_path, file_name)
     upload_btn.send_keys(file_path)
-    time.sleep(5)
+    time.sleep(3)
     content = driver.page_source
     soup = BeautifulSoup(content, 'html.parser')
 
@@ -151,7 +152,7 @@ def search_tineye(driver, abs_path, file_name, img_url_ids):
         tin_dict['tin_text'] = record_match_all
         tin_dict['tineye_filename'] = record_match_filename
         tin_dict['Img_ID'] = img_url_ids
-    print(record_match_all)
+    #print(record_match_all)
     tin_df = pd.DataFrame.from_dict(tin_dict, orient='index')
     tin_df2 = tin_df.transpose()
     tin_df2 = pd.DataFrame(tin_df2, columns=['Img_ID', 'num_res', 'tineye_filename', 'tin_text'])
@@ -176,7 +177,7 @@ def write_temp_img(img_url_id, image):
 
 def main(db_cred):
     driver = selenium_driver()
-    img_bytes = get_image_from_db_reverse(db_cred)
+    img_bytes = get_image_from_db_crop(db_cred)
     for i in img_bytes:
         img_url_ids = i[0]
         cropped_imgs = i[1]
@@ -206,11 +207,3 @@ def main(db_cred):
     #return joint_data
 
 
-# Setup the parent directory containing sub-folders of image files.
-img_direct = '/Users/alighterness/PycharmProjects/image_search_main/image_data'
-
-#main(img_direct)
-
-# if __name__ == "__main__":
-#    try:
-#        lambda: get_img_files.main(directory)

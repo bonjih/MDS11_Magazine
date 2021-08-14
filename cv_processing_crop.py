@@ -20,9 +20,9 @@ from db_manager import data_roi_cv, get_image_from_db_cv
 
 
 # convert to binary for db insert
-def convert_to_binary(img_name):
+def convert_to_binary(img_name, img_url_id):
     img_str = cv2.imencode('.jpg', img_name)[1].tobytes()
-    data_roi_cv(img_str)  # to db manager
+    data_roi_cv(img_str, img_url_id)  # to db manager
 
 
 def image_preprocess(image):
@@ -39,7 +39,7 @@ def image_preprocess(image):
 
 
 # Region of Interest Extraction
-def get_roi(dilation_image, image):  # InputOutputArray only required for development
+def get_roi(dilation_image, image, img_url_id):  # InputOutputArray only required for development
     roi_number = 0
     contours, _ = cv2.findContours(dilation_image, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
@@ -54,7 +54,7 @@ def get_roi(dilation_image, image):  # InputOutputArray only required for develo
         if bound_area >= 14000 and contour_area >= 3.5:
             roi = image[y:y + h, x:x + w]
             # cv2.imwrite('img_{}.png'.format(roi_number), roi)
-            convert_to_binary(roi)
+            convert_to_binary(roi, img_url_id)
             #data_roi_cv(roi)  # to db manager
             roi_number += 1
     return roi_number
@@ -63,8 +63,9 @@ def get_roi(dilation_image, image):  # InputOutputArray only required for develo
 def main(db_cred):
 
     img_urls = get_image_from_db_cv(db_cred)
-
-    for img_url in img_urls:
+    for i in img_urls:
+        img_url_id = i[0]
+        img_url = i[1]
         resp_url = requests.get(img_url)
         if resp_url.status_code == 200:
             image_links = requests.get(img_url, stream=True).raw
@@ -73,4 +74,4 @@ def main(db_cred):
             # cv2.imshow('test', img)
             # cv2.waitKey(0)
             dilation_image = image_preprocess(img)
-            get_roi(dilation_image, img)
+            get_roi(dilation_image, img, img_url_id)
