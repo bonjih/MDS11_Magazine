@@ -37,6 +37,7 @@ def selenium_driver():
                               options=options)
     return driver
 
+
 try:
     def slow_scroll(driver):
         check_height = driver.execute_script("return document.body.scrollHeight;")
@@ -67,15 +68,15 @@ except ImportError:
     from six.moves.urllib.parse import urlparse
 
 
-def phantom_noimages():
-    from fake_useragent import UserAgent
-    from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-    ua = UserAgent()
-    # ua.update()
-    # https://stackoverflow.com/questions/29916054/change-user-agent-for-selenium-driver
-    caps = DesiredCapabilities.PHANTOMJS
-    caps["phantomjs.page.settings.userAgent"] = ua.random
-    return webdriver.PhantomJS(service_args=["--load-images=no"], desired_capabilities=caps)
+# def phantom_noimages():
+#     from fake_useragent import UserAgent
+#     from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+#     ua = UserAgent()
+#     # ua.update()
+#     # https://stackoverflow.com/questions/29916054/change-user-agent-for-selenium-driver
+#     caps = DesiredCapabilities.PHANTOMJS
+#     caps["phantomjs.page.settings.userAgent"] = ua.random
+#     return webdriver.PhantomJS(service_args=["--load-images=no"], desired_capabilities=caps)
 
 
 def randdelay(a, b):
@@ -107,6 +108,8 @@ def selenium_helper_pint(login, pw, driver):
     randdelay(2, 4)
 
 
+# TODO instagram tents to take time loading the scoll, need to hit retry several times
+# TODO need to find away to click retry with selenium
 def selenium_helper_insta(login, pw, driver):
     time.sleep(3)
     username_element = WebDriverWait(driver, 10).until(
@@ -231,7 +234,7 @@ class Helper(object):
                         slow_scroll(self.driver)
                     else:
                         slow_scroll(self.driver)
-                        dummy.send_keys(Keys.PAGE_DOWN) # trying bage down and slow scroll
+                        dummy.send_keys(Keys.PAGE_DOWN)  # trying bage down and slow scroll
                         randdelay(1, 2)
                         threshold -= 1
 
@@ -288,8 +291,8 @@ def process_site_images(magazine_name, urls_list, name_host, owners, users, pswr
                 # make_dir(dirname)
                 # download_images(dirname, urls, name_host, site_type[0])
                 data_to_db_social(urls, site_type[0], magazine_name, db_creds)
-                #send_to_db(urls, site_type[0], magazine_name, owners, credit, metadata, host_urls,  img_page_url,
-                           #art_date, art_title, db_creds)
+                # send_to_db(urls, site_type[0], magazine_name, owners, credit, metadata, host_urls,  img_page_url,
+                # art_date, art_title, db_creds)
 
                 count += 1
 
@@ -300,8 +303,8 @@ def process_site_images(magazine_name, urls_list, name_host, owners, users, pswr
                 # make_dir(dirname)
                 # download_images(dirname, urls, name_host, site_type[0])
                 data_to_db_social(urls, site_type[0], magazine_name, db_creds)
-                #send_to_db(urls, magazine_name, owners, credit, metadata, host_urls, img_page_url, site_type,
-                           #art_date, art_title, db_creds)
+                # send_to_db(urls, magazine_name, owners, credit, metadata, host_urls, img_page_url, site_type,
+                # art_date, art_title, db_creds)
                 count += 1
 
 

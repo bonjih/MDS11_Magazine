@@ -104,10 +104,10 @@ def search_google(img_files):
 
 
 # Tineye web-scraping function
-def search_tineye(driver, abs_path, file_name):
+def search_tineye(driver, abs_path, file_name, img_url_ids):
 
     # Initialise empty dictionary for data storage and CSV output
-    tin_dict = {'Img_Directory': [],
+    tin_dict = {'Img_ID': [],
                 'num_res': [],
                 'tineye_filename': [],
                 'tin_text': []}
@@ -143,10 +143,20 @@ def search_tineye(driver, abs_path, file_name):
         for match in soup_match:
             record_match_all.append([match.get_text(strip=True)])
 
+        # identify specifically "filename" found in each match as this may be most useful
+        soup_match_filename = soup.find_all('a', {"class": "truncate"})
+        for filename in soup_match_filename:
+            record_match_filename.append([filename.get_text(strip=True)])
+
+        tin_dict['tin_text'] = record_match_all
+        tin_dict['tineye_filename'] = record_match_filename
+        tin_dict['Img_ID'] = img_url_ids
+    print(record_match_all)
     tin_df = pd.DataFrame.from_dict(tin_dict, orient='index')
     tin_df2 = tin_df.transpose()
-    tin_df2 = pd.DataFrame(tin_df2, columns=['Img_Directory', 'num_res', 'tineye_filename', 'tin_text'])
-    pd.DataFrame(tin_df2).to_csv("tineye_dict_data.csv")
+    tin_df2 = pd.DataFrame(tin_df2, columns=['Img_ID', 'num_res', 'tineye_filename', 'tin_text'])
+    tin_df2.to_csv('tineye_dict_data.csv', mode='a')
+    #pd.DataFrame(tin_df2).to_csv("tineye_dict_data.csv")
     return tin_df2
 
 
@@ -160,7 +170,7 @@ def write_temp_img(img_url_id, image):
         path_to_img = pathlib.Path(image_path)
         abs_path = path_to_img.absolute()
         file_name = file_path
-        print(file_name)
+
         return abs_path, file_name
 
 
@@ -176,11 +186,14 @@ def main(db_cred):
         # cv2.imshow('test', img)
         # cv2.waitKey(0)
         abs_path, file_name = write_temp_img(img_url_ids, img)
-        search_tineye(driver, abs_path, file_name)
+        search_tineye(driver, abs_path, file_name, img_url_ids)
         try:
+            # remove file for disk after analysis
+            time.sleep(5)
             os.remove(file_name)
         except PermissionError as e:
-            time.sleep(5)  # need to test wait time, depends on time to load image
+            print(e)
+            time.sleep(15)  # need to test wait time, depends on time to load image
             os.remove(file_name)
 
 

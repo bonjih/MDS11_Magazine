@@ -49,10 +49,29 @@ def get_image_from_db_reverse(db_cred):
 
 # create img_url_id
 # should create a db trigger and concat img_metadata_id and mag_name_id
-def create_img_url_id(m_name_id):
-    url_ids = random.randint(1000, 9999)
-    url_id = str(url_ids) + str(m_name_id[0])
-    return url_id
+try:
+    def create_img_url_id(m_name_id):
+        url_ids = random.randint(1000, 99999)
+        url_id = str(url_ids) + str(m_name_id[0])
+        cursor.execute('SELECT img_url_id FROM image_data')
+        urlID = cursor.fetchall()
+
+        i = [list(i) for i in urlID]
+        res = any(url_id in sublist for sublist in i)
+        if res is False:
+            return url_id
+        else:
+            url_ids = random.randint(1000, 99999)
+            url_id = str(url_ids) + str(m_name_id[0])
+            return url_id
+
+except IndexError as e:
+    print(e)
+except AttributeError as e:
+    print(e)
+except pymysql.IntegrityError as e:
+    print(e)
+    pass
 
 
 def create_datetime():
@@ -120,40 +139,47 @@ def data_to_db_nlp(fname, lname, db_cred):
 
     conn.commit()
 
+try:
+    # TODO combine social and main into a single function
+    def data_to_db_social(im_url, s_type, mag_names, db_cred):
+        print(mag_names)
+        cursor, conn = db_connect(db_cred)
 
-# TODO combine social and main into a single function
-def data_to_db_social(im_url, s_type, mag_names, db_cred):
-    print(mag_names)
-    cursor, conn = db_connect(db_cred)
+        mag_names = mag_names[0]
+        # add data to metadata table
+        cursor.execute("SELECT mag_name_id FROM publisher WHERE mag_name = %s", [mag_names])
+        m_name_id = cursor.fetchone()
 
-    mag_names = mag_names[0]
-    # add data to metadata table
-    cursor.execute("SELECT mag_name_id FROM publisher WHERE mag_name = %s", [mag_names])
-    m_name_id = cursor.fetchone()
+        for matches_img_url in im_url:
+            image_page = requests.get(matches_img_url)
 
-    for matches_img_url in im_url:
-        image_page = requests.get(matches_img_url)
+            date_time = create_datetime()
+            url_id = create_img_url_id(m_name_id)
 
-        date_time = create_datetime()
-        url_id = create_img_url_id(m_name_id)
+            if image_page.status_code == 200:
+                img_bin = url_to_image(matches_img_url)
 
-        if image_page.status_code == 200:
-            response = requests.get(matches_img_url, stream=True)
+                cursor.execute(
+                    "INSERT INTO image_data (mag_name_id, img_url_id, img_url, datatime_img_url_scrapped)"
+                    "VALUES(%s, %s, %s, %s)", (m_name_id, url_id, matches_img_url, date_time))
 
-            cursor.execute(
-                "INSERT INTO image_data (mag_name_id, img_url_id, img_url, datatime_img_url_scrapped)"
-                "VALUES(%s, %s, %s, %s)", (m_name_id, url_id, matches_img_url, date_time))
+                cursor.execute("INSERT INTO images (img_url_id, mag_name_id, site_type, image)"
+                               "VALUES(%s, %s, %s, %s)", (url_id, m_name_id, s_type, img_bin))
 
-            cursor.execute("INSERT INTO images (img_url_id, mag_name_id, site_type, image)"
-                           "VALUES(%s, %s, %s, %s)", (url_id, m_name_id, s_type, response.raw))
+                conn.commit()
 
-            conn.commit()
+            print('added', s_type)
 
-        print('added', s_type)
+except IndexError as e:
+    print(e)
+except AttributeError as e:
+    print(e)
+except pymysql.IntegrityError as e:
+    print(e)
+    pass
 
-
-def data_to_db_main(matches_img_urls, mag_names, owners, credited, metadatas, host_urls, img_page_urls, s_type,
-                    art_date, art_title, db_cred):
+def image_data_to_db_main(matches_img_urls, mag_names, owners, credited, metadatas, host_urls, img_page_urls, s_type,
+                          art_date, art_title, db_cred):
     cursor, conn = db_connect(db_cred)
 
     for matches_img_url, img_page_url, metadata, credit in zip(matches_img_urls, img_page_urls, credited, metadatas):
@@ -182,25 +208,34 @@ def data_to_db_main(matches_img_urls, mag_names, owners, credited, metadatas, ho
                 "article_created_data, article_name, datatime_img_url_scrapped) "
                 "VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)",
                 (m_name_id, url_id, metadata, credit, matches_img_url, img_page_urls, art_date, art_title, date_time))
-            # conn.commit()
-
-            #  select image url from image_data, add resulting BLOB to images table
-            cursor.execute('SELECT img_url FROM image_data WHERE mag_name_id = %s', [m_name_id])
-            im_url = cursor.fetchone()
-            im_url = im_url[0]
-
-            # URL images ids are added to table 'nlp_image_meta' using a trigger
-            # create trigger 'add_url_id_to_img' after update on 'image_data'
-            # FOR EACH ROW
-            # INSERT INTO images(img_url_id) VALUES(new.img_url_id)
-
-            image_page = requests.get(im_url)
-            if image_page.status_code == 200:
-                img_bin = url_to_image(im_url)
-                cursor.execute(
-                    "INSERT INTO images (mag_name_id, site_type, image)" "VALUES(%s, %s, %s)",
-                    (m_name_id, s_type, img_bin))
-
             conn.commit()
 
-            print('added', s_type)
+            print('added', s_type, mag_names)
+
+
+def image_blob_to_db_main(mag_names, s_type):
+    # add data to metadata table
+    cursor.execute("SELECT mag_name_id FROM publisher WHERE mag_name = %s", [mag_names])
+    m_name_id = cursor.fetchone()
+
+    #  select image url from image_data, add resulting BLOB to images table
+    cursor.execute('SELECT img_url FROM image_data WHERE mag_name_id = %s', [m_name_id])
+    im_url = cursor.fetchall()
+    for i in im_url:
+        im_url = i[0]
+
+        # URL images ids are added to table 'nlp_image_meta' using a trigger
+        # create trigger 'add_url_id_to_img' after update on 'image_data'
+        # FOR EACH ROW
+        # INSERT INTO images(img_url_id) VALUES(new.img_url_id)
+
+        image_page = requests.get(im_url)
+        if image_page.status_code == 200:
+            img_bin = url_to_image(im_url)
+            cursor.execute(
+                "INSERT INTO images (mag_name_id, site_type, image)" "VALUES(%s, %s, %s)",
+                (m_name_id, s_type, img_bin))
+
+        conn.commit()
+
+    print('blob added', s_type, mag_names)
