@@ -11,7 +11,7 @@ from db_manager import add_nlp_reverse_search_results
 def caption_pathways():
     # Define pathways and load captions
     # header_list = ["Item_num", "Img_ID", "num_res", "tineye_filename", "tin_text"]
-    dataset = pd.read_csv("tineye_dict_data - tineye_dict_data.csv")
+    dataset = pd.read_csv("tineye_dict_data - tineye_dict_data.csv")  # output of img_reverse_search_DEV.py - Tineye
     dataset = pd.DataFrame(dataset)
     return dataset
 
