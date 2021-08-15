@@ -1,0 +1,5 @@
+CREATE TRIGGER `add_url_id_to_img` AFTER UPDATE ON `image_data`
+ FOR EACH ROW INSERT INTO images(img_url_id) VALUES(new.img_url_id)
+
+CREATE TRIGGER `add_url_id_to_nlp` AFTER UPDATE ON `image_data`
+ FOR EACH ROW INSERT INTO nlp_image_meta (img_url_id) VALUES (new.img_url_id)
