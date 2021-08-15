@@ -1,4 +1,4 @@
-# MDS11_Magazine
+# MDS11 Magazine Image Search and Recognition
 
 This application is a web scraping, image search and recognition tool for the Copywrite industry. The application scrapes images (and content within the image), 
 and captions from specific websites. Tools such as NLP and CV are used extract metadata about the image, e.g., artwork within the image. 
