@@ -3,9 +3,6 @@ import numpy as np
 import pandas as pd
 from prettytable import PrettyTable
 import re
-import string
-
-from db_manager import add_nlp_reverse_search_results
 
 
 def caption_pathways():
