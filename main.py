@@ -49,17 +49,17 @@ if __name__ == "__main__":  # only executes if imported as main file
         run_io_tasks_in_parallel([
             #lambda: get_main_site_bauer.main(creds, db_creds),
             # lambda: get_main_site_media.main(creds, db_creds), # TODO media site not complete, behind JS
-            # lambda: get_social_img.call_facebook(creds, db_creds),
-            # lambda: get_social_img.call_pinterest(creds, db_creds),
+            #lambda: get_social_img.call_facebook(creds, db_creds),
+            #lambda: get_social_img.call_pinterest(creds, db_creds),
             # lambda: get_social_img.call_instagram(creds, db_creds),
             # lambda: get_social_img.call_twitter(creds, db_creds),
         ])
 
         # TODO CV and NLP processing, more work is required to time the threading
-        #cv_processing_crop.main(db_creds)
+        cv_processing_crop.main(db_creds)
         # nlp_search.main(db_creds)
-        img_reverse_search_DEV.main(db_creds)
-        # nlp_imagescrape_tineye.main(db_creds)
+        #img_reverse_search_DEV.main(db_creds)
+        nlp_imagescrape_tineye.main()
 
     except TimeoutException as e:
         print("Wait timeout, check 'WebDriverWait(driver, n)' in Class Helper. Error: {}".format(e))

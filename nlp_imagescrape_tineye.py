@@ -10,10 +10,8 @@ from db_manager import add_nlp_reverse_search_results
 
 def caption_pathways():
     # Define pathways and load captions
-    # caption_input_path = '.'
-    # caption_output_path = '.'
-    header_list = ["Item_num", "Img_ID", "num_res", "tineye_filename", "tin_text"]
-    dataset = pd.read_csv("tineye_dict_data - tineye_dict_data.csv", names=header_list)
+    # header_list = ["Item_num", "Img_ID", "num_res", "tineye_filename", "tin_text"]
+    dataset = pd.read_csv("tineye_dict_data - tineye_dict_data.csv")
     dataset = pd.DataFrame(dataset)
     return dataset
 
@@ -37,58 +35,56 @@ def get_URL_results(dataset, num_set):
     return (dataset, new_num_set)
 
 
-# def tidy_up_URL1(dataset1, new_num_set):
-#     # shorten url address for jpg
-#     dataset1 = pd.DataFrame(dataset1)
-#     dataset1 = dataset1.reset_index(drop=True)
-#     for count in range(1, new_num_set):
-#         a_string = (dataset1.Img_ID[count])
-#         split_string = (a_string.split(".", 1))
-#         substring = split_string
-#         dataset1.Img_ID[count] = substring[0]
-#
-#     return dataset1
-#
-#
-# def tidy_up_URL2(dataset2, new_num_set):
-#     # shorten url address for jpg
-#     dataset2a = pd.DataFrame(dataset2)
-#     for count in range(1, new_num_set):
-#         a_string = (dataset2.Img_ID[count])
-#         print(a_string)
-#         split_string = (a_string.split("a/", 1))
-#         substring = split_string
-#         dataset2.Img_ID[count] = substring[1]
-#
-#     return dataset2
-#
-#
-# def tidy_up_num_res1(dataset3, new_num_set):
-#     # shorten url address for jpg
-#     dataset3 = pd.DataFrame(dataset3)
-#     for count in range(1, new_num_set):
-#         a_string = (dataset3.num_res[count])
-#         split_string = (a_string.split(" r", 1))
-#         print(split_string)
-#         substring = split_string
-#         dataset3.num_res[count] = substring[0]
-#
-#     return dataset3
-#
-#
-# def tidy_up_num_res2(dataset4, new_num_set):
-#     # shorten url address for jpg
-#     dataset4 = pd.DataFrame(dataset4)
-#     for count in range(1, new_num_set):
-#         a_string = (dataset4.num_res[count])
-#         split_string = (a_string.split("' ", 1))
-#         substring = split_string
-#         dataset4.num_res[count] = (substring[1])
-#
-#     dataset4 = pd.DataFrame(dataset4).astype(str)
-#     dataset4.drop([0])
-#
-#     return dataset4
+def tidy_up_URL1(dataset1, new_num_set):
+    # shorten url address for jpg
+    dataset1 = pd.DataFrame(dataset1)
+    dataset1 = dataset1.reset_index(drop=True)
+    for count in range(1, new_num_set):
+        a_string = (dataset1.img_direc[count])
+        split_string = (a_string.split(".", 1))
+        substring = split_string
+        dataset1.img_direc[count] = substring[0]
+
+    return dataset1
+
+
+def tidy_up_URL2(dataset2, new_num_set):
+    # shorten url address for jpg
+    dataset2 = pd.DataFrame(dataset2)
+    for count in range(1, new_num_set):
+        a_string = (dataset2.img_direc[count])
+        split_string = (a_string.split("a/", 1))
+        substring = split_string
+        dataset2.img_direc[count] = substring[1]
+
+    return dataset2
+
+
+def tidy_up_num_res1(dataset3, new_num_set):
+    # shorten url address for jpg
+    dataset3 = pd.DataFrame(dataset3)
+    for count in range(1, new_num_set):
+        a_string = (dataset3.num_res[count])
+        split_string = (a_string.split(" r", 1))
+        substring = split_string
+        dataset3.num_res[count] = substring[0]
+
+    return dataset3
+
+
+def tidy_up_num_res2(dataset4, new_num_set):
+    # shorten url address for jpg
+    dataset4 = pd.DataFrame(dataset4)
+    for count in range(1, new_num_set):
+        a_string = (dataset4.num_res[count])
+        split_string = (a_string.split("' ", 1))
+        substring = split_string
+        dataset4.num_res[count] = (substring[1])
+
+    dataset4 = pd.DataFrame(dataset4).astype(str)
+    dataset4.drop([0])
+
+    return dataset4
 
 
 def select_info(substring_text):
@@ -167,7 +163,7 @@ def get_artist_art(dataset5, new_num_set):
 
 
 def tidy_up_all(dataset6):
-    dataset6 = dataset6[['Img_ID', 'Art_details']]
+    dataset6 = dataset6[['img_direc', 'Art_details']]
     for count in range(1, len(dataset6)):
         if dataset6.Art_details[count] == '':
             dataset6.Art_details[count] = 'unknown'
@@ -180,17 +176,14 @@ def results(dataset7):
     return ()
 
 
-if __name__ == "__main__":
+def main():
     dataset = caption_pathways()
     num_set = len(dataset)
     dataset1, new_num_set = get_URL_results(dataset, num_set)
-    #dataset2 = tidy_up_URL1(dataset1, new_num_set)
-    dataset3 = tidy_up_URL2(dataset1, new_num_set)
-    # dataset4 = tidy_up_num_res1(dataset3, new_num_set)
-    # dataset5 = tidy_up_num_res2(dataset4, new_num_set)
-    # dataset6 = get_artist_art(dataset5, new_num_set)
-    # dataset7 = tidy_up_all(dataset6)
-    #results(dataset7)
-    # add_nlp_reverse_search_results(db_creds)
-
-# def main(db_creds):
+    dataset2 = tidy_up_URL1(dataset1, new_num_set)
+    dataset3 = tidy_up_URL2(dataset2, new_num_set)
+    dataset4 = tidy_up_num_res1(dataset3, new_num_set)
+    dataset5 = tidy_up_num_res2(dataset4, new_num_set)
+    dataset6 = get_artist_art(dataset5, new_num_set)
+    dataset7 = tidy_up_all(dataset6)
+    results(dataset7)

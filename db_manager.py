@@ -51,7 +51,7 @@ def get_image_from_db_crop(db_cred):
 # should create a db trigger and concat img_metadata_id and mag_name_id
 try:
     def create_img_url_id(m_name_id):
-        url_ids = random.randint(1000, 99999)
+        url_ids = random.randint(10000, 99999)
         url_id = str(url_ids) + str(m_name_id[0])
         cursor.execute('SELECT img_url_id FROM image_data')
         urlID = cursor.fetchall()

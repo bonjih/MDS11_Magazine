@@ -156,7 +156,7 @@ def search_tineye(driver, abs_path, file_name, img_url_ids):
     tin_df = pd.DataFrame.from_dict(tin_dict, orient='index')
     tin_df2 = tin_df.transpose()
     tin_df2 = pd.DataFrame(tin_df2, columns=['Img_ID', 'num_res', 'tineye_filename', 'tin_text'])
-    tin_df2.to_csv('tineye_dict_data.csv', mode='a')
+    tin_df2.to_csv('tineye_dict_data.csv', mode='a', header=False)
     #pd.DataFrame(tin_df2).to_csv("tineye_dict_data.csv")
     return tin_df2
 
@@ -190,7 +190,7 @@ def main(db_cred):
         search_tineye(driver, abs_path, file_name, img_url_ids)
         try:
             # remove file for disk after analysis
-            time.sleep(5)
+            time.sleep(10)
             os.remove(file_name)
         except PermissionError as e:
             print(e)
