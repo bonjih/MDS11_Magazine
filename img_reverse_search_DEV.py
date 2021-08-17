@@ -184,18 +184,18 @@ def main(db_cred):
         nparr = np.fromstring(cropped_imgs, np.uint8)
         img_array = np.asarray(bytearray(nparr), dtype=np.uint8)
         img = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
-        # cv2.imshow('test', img)
-        # cv2.waitKey(0)
+        cv2.imshow('test', img)
+        cv2.waitKey(0)
         abs_path, file_name = write_temp_img(img_url_ids, img)
-        search_tineye(driver, abs_path, file_name, img_url_ids)
+        #search_tineye(driver, abs_path, file_name, img_url_ids)
         try:
             # remove file for disk after analysis
             time.sleep(10)
-            os.remove(file_name)
+            #os.remove(file_name)
         except PermissionError as e:
             print(e)
             time.sleep(15)  # need to test wait time, depends on time to load image
-            os.remove(file_name)
+            #os.remove(file_name)
 
 
     #data_tineye = search_Tineye(image_id['Img_Directory'])
