@@ -49,13 +49,13 @@ if __name__ == "__main__":  # only executes if imported as main file
         run_io_tasks_in_parallel([
             #lambda: get_main_site_bauer.main(creds, db_creds),
             # lambda: get_main_site_media.main(creds, db_creds), # TODO media site not complete, behind JS
-            # lambda: get_social_img.call_facebook(creds, db_creds),
+            lambda: get_social_img.call_facebook(creds, db_creds),
 
             # TODO pinterest Vogue Australia needs work, when to stop, goes of forever. Need a stop date
             # TODO mostly fashion, need CV to detect clothes to reject image
             #lambda: get_social_img.call_pinterest(creds, db_creds),
-            lambda: get_social_img.call_instagram(creds, db_creds),
-            lambda: get_social_img.call_twitter(creds, db_creds),
+            # lambda: get_social_img.call_instagram(creds, db_creds),
+            # lambda: get_social_img.call_twitter(creds, db_creds),
         ])
 
         # TODO CV and NLP processing, more work is required to time the threading
@@ -84,3 +84,7 @@ if __name__ == "__main__":  # only executes if imported as main file
     except pymysql.InternalError as e:  # multithreading causing this error, need a queue manager
         print(e)
         pass
+    except IndexError as e:  # need to chase this error down  - image_blob_to_db_main(mag_names, s_type) line 127  cursor.execute("SELECT img_url_id FROM images") line 223
+        print(e)
+        pass
+

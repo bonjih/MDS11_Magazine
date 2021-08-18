@@ -119,6 +119,7 @@ def data_to_db_nlp(fname, lname, db_cred):
 
     datetime = create_datetime()
 
+    # occasionally index error here
     cursor.execute(
         "INSERT INTO nlp_image_meta (fname, lname, datatime_img_url_scrapped)"
         "VALUES(%s, %s, %s)", (fname, lname, datetime))
@@ -220,6 +221,7 @@ def image_blob_to_db_main(mag_names, s_type):
         if image_page.status_code == 200:
             img_bin = url_to_image(img_url)
 
+            # occasionally index error here
             cursor.execute("SELECT img_url_id FROM images")
             exits = cursor.fetchall()
             exits = check_id_exist(exits, img_url_id)
