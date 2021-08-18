@@ -34,6 +34,16 @@ def check_entry_exist(entry, exits):
         return False
 
 
+def check_id_exist(urlID, url_id):
+    i = [list(i) for i in urlID]
+    res = any(url_id in sublist for sublist in i)
+    if res is False:
+        return False
+    else:
+        pass
+
+
+
 # adds nlp results of tineye/google to db
 def add_nlp_reverse_search_results(db_cred):
     pass
@@ -87,12 +97,16 @@ def get_nlp_data(db_cred):
 
 
 # download the image, convert to a np array and read
-def url_to_image(url):
-    resp = urlopen(url)
-    image = np.asarray(bytearray(resp.read()), dtype="uint8")
-    image = cv2.imdecode(image, cv2.IMREAD_COLOR)
-    image = cv2.imencode('.jpg', image)[1].tobytes()
-    return image
+try:
+    def url_to_image(url):
+        resp = urlopen(url)
+        image = np.asarray(bytearray(resp.read()), dtype="uint8")
+        image = cv2.imdecode(image, cv2.IMREAD_COLOR)
+        image = cv2.imencode('.jpg', image)[1].tobytes()
+        return image
+
+except cv2.error as e:
+    print('No image to display')
 
 
 def data_to_db_nlp(fname, lname, db_cred):
@@ -135,17 +149,24 @@ try:
             if image_page.status_code == 200:
                 img_bin = url_to_image(matches_img_url)
 
-                cursor.execute(
-                    "INSERT INTO image_data (mag_name_id, img_url, datatime_img_url_scrapped)"
-                    "VALUES(%s, %s, %s)", (m_name_id, matches_img_url, date_time))
+                cursor.execute("SELECT img_url_id FROM images")
+                exits = cursor.fetchall()
+                exits = check_id_exist(exits, img_url_id)
 
-                cursor.execute(
-                    "INSERT INTO images (img_url_id, mag_name_id, site_type, image)" "VALUES(%s, %s, %s, %s)",
-                    (img_url_id, m_name_id, s_type, img_bin))
+                if exits is False:
+                    cursor.execute(
+                        "INSERT INTO image_data (mag_name_id, img_url, datatime_img_url_scrapped)"
+                        "VALUES(%s, %s, %s)", (m_name_id, matches_img_url, date_time))
 
-                conn.commit()
+                    cursor.execute(
+                        "INSERT INTO images (img_url_id, mag_name_id, site_type, image)" "VALUES(%s, %s, %s, %s)",
+                        (img_url_id, m_name_id, s_type, img_bin))
 
-            print('added', s_type)
+                    conn.commit()
+
+                    print('added', s_type)
+                else:
+                    print('skipping, img_url_id existing')
 
 except IndexError as e:
     print(e)
@@ -162,19 +183,7 @@ def image_data_to_db_main(matches_img_urls, mag_names, owners, credited, metadat
 
     for matches_img_url, img_page_url, metadata, credit in zip(matches_img_urls, img_page_urls, credited, metadatas):
 
-        # table - publisher
-        cursor.execute('SELECT mag_name FROM publisher WHERE mag_name = %s', [mag_names])
-        exits = cursor.fetchone()
-        exits = exits[0]
-        exits = check_entry_exist(mag_names, exits)
-
-        if exits is False:
-            cursor.executemany("INSERT INTO publisher (pub_name, mag_name)" "VALUES(%s, %s)", [(owners, mag_names)])
-            print('Owner and title added to db')
-        else:
-            print('skipping, owner and title exist in database')
-
-            # add data to metadata table
+            #  add data to metadata table
             cursor.execute("SELECT mag_name_id FROM publisher WHERE mag_name = %s", [mag_names])
             m_name_id = cursor.fetchone()
 
@@ -196,7 +205,7 @@ def image_blob_to_db_main(mag_names, s_type):
     m_name_id = cursor.fetchone()
 
     #  select image url from image_data, add resulting BLOB to images table
-    cursor.execute('SELECT img_url FROM image_data WHERE mag_name_id = %s', [m_name_id])
+    cursor.execute('SELECT img_url FROM image_data WHERE mag_name_id')
     img_url = cursor.fetchall()
 
     # select image url id for insert into the images table
@@ -210,9 +219,17 @@ def image_blob_to_db_main(mag_names, s_type):
         image_page = requests.get(img_url)
         if image_page.status_code == 200:
             img_bin = url_to_image(img_url)
-            cursor.execute(
-                "INSERT INTO images (img_url_id, mag_name_id, site_type, image)" "VALUES(%s, %s, %s, %s)",
-                (img_url_id, m_name_id, s_type, img_bin))
+
+            cursor.execute("SELECT img_url_id FROM images")
+            exits = cursor.fetchall()
+            exits = check_id_exist(exits, img_url_id)
+
+            if exits is False:
+                cursor.execute(
+                    "INSERT INTO images (img_url_id, mag_name_id, site_type, image)" "VALUES(%s, %s, %s, %s)",
+                    (img_url_id, m_name_id, s_type, img_bin))
+            else:
+                print('skipping, img_url_id existing')
 
         conn.commit()
 
