@@ -106,7 +106,7 @@ try:
         return image
 
 except cv2.error as e:
-    print('No image to display')
+    print('No image to display') # sometime an images does not exist
 
 
 def data_to_db_nlp(fname, lname, db_cred):

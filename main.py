@@ -49,27 +49,35 @@ if __name__ == "__main__":  # only executes if imported as main file
         run_io_tasks_in_parallel([
             lambda: get_main_site_bauer.main(creds, db_creds),
             # lambda: get_main_site_media.main(creds, db_creds), # TODO media site not complete, behind JS
-            #lambda: get_social_img.call_facebook(creds, db_creds),
+            # lambda: get_social_img.call_facebook(creds, db_creds),
             lambda: get_social_img.call_pinterest(creds, db_creds),
-            #lambda: get_social_img.call_instagram(creds, db_creds),
-            lambda: get_social_img.call_twitter(creds, db_creds),
+            # lambda: get_social_img.call_instagram(creds, db_creds),
+            #lambda: get_social_img.call_twitter(creds, db_creds),
         ])
 
         # TODO CV and NLP processing, more work is required to time the threading
-        #cv_processing_crop.main(db_creds)
+        # cv_processing_crop.main(db_creds)
         # nlp_search.main(db_creds)
-        #img_reverse_search_DEV.main(db_creds)
-        #nlp_imagescrape_tineye.main()
+        # img_reverse_search_DEV.main(db_creds)
+        # nlp_imagescrape_tineye.main()
 
     except TimeoutException as e:
         print("Wait timeout, check 'WebDriverWait(driver, n)' in Class Helper. Error: {}".format(e))
-    # except pymysql.OperationalError as e:
-    #     print('No connection to database. Please check connection details in config.json or database connection: {}'.format(e))
+    except pymysql.OperationalError as e:
+        print(
+            'No connection to database. Please check connection details in config.json or database connection: {}'.format(e))
+        pass
     except pymysql.DataError as e:
         print('Data too long, check variable length in database : {}'.format(e))
     except PermissionError as e:
         print(e)
         time.sleep(15)  # need to test wait time, depends on time to load image
     except pymysql.IntegrityError as e:
+        print(e)
+        pass
+    except AssertionError as e:  # strange error, appears to be specific to pymysql and random
+        print(e)
+        pass
+    except pymysql.InternalError as e:  # multithreading causing this error, need a queue manager
         print(e)
         pass
