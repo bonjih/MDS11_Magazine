@@ -47,12 +47,15 @@ if __name__ == "__main__":  # only executes if imported as main file
         # add scrape calls here
         # multithread all scrapes
         run_io_tasks_in_parallel([
-            lambda: get_main_site_bauer.main(creds, db_creds),
+            #lambda: get_main_site_bauer.main(creds, db_creds),
             # lambda: get_main_site_media.main(creds, db_creds), # TODO media site not complete, behind JS
             # lambda: get_social_img.call_facebook(creds, db_creds),
-            lambda: get_social_img.call_pinterest(creds, db_creds),
-            # lambda: get_social_img.call_instagram(creds, db_creds),
-            #lambda: get_social_img.call_twitter(creds, db_creds),
+
+            # TODO pinterest Vogue Australia needs work, when to stop, goes of forever. Need a stop date
+            # TODO mostly fashion, need CV to detect clothes to reject image
+            #lambda: get_social_img.call_pinterest(creds, db_creds),
+            lambda: get_social_img.call_instagram(creds, db_creds),
+            lambda: get_social_img.call_twitter(creds, db_creds),
         ])
 
         # TODO CV and NLP processing, more work is required to time the threading
