@@ -83,11 +83,6 @@ def randdelay(a, b):
     time.sleep(random.uniform(a, b))
 
 
-# may need default encoding type here '.decode('utf8')'
-# def u_to_s(uni):
-#     return unicodedata.normalize('NFKD', uni).encode('ascii', 'ignore')
-
-
 def selenium_helper_fb(login, pw, driver):
     email_elem = driver.find_element_by_css_selector("input[name='email']")
     email_elem.send_keys(login)
@@ -263,13 +258,6 @@ def process_site_images(magazine_name, urls_list, name_host, owners, users, pswr
     driver = selenium_driver()
     count = 0
 
-    credit = ''
-    metadata = ''
-    host_urls = ''
-    img_page_url = ''
-    art_date = ''
-    art_title = ''
-
     for magazine_name, urls_list, name_host, owners, users, pswrd, site_type in zip(magazine_name, urls_list, name_host,
                                                                                     owners, users, pswrd, site_type):
 
@@ -280,8 +268,6 @@ def process_site_images(magazine_name, urls_list, name_host, owners, users, pswr
             # download_images(dirname, urls, name_host, site_type[0])
             data_to_db_social(urls, site_type[0], magazine_name, db_creds)
             image_blob_to_db(magazine_name, site_type[0])
-            # send_to_db(urls, magazine_name, owners, credit, metadata, host_urls, img_page_url, site_type, art_date,
-            #            art_title, db_creds)
 
         elif count == 0:
             if host_url_list[0] == 'https://twitter.com':
@@ -293,9 +279,6 @@ def process_site_images(magazine_name, urls_list, name_host, owners, users, pswr
                 # download_images(dirname, urls, name_host, site_type[0])
                 data_to_db_social(urls, site_type[0], magazine_name, db_creds)
                 image_blob_to_db(magazine_name, site_type)
-                # send_to_db(urls, site_type[0], magazine_name, owners, credit, metadata, host_urls,  img_page_url,
-                # art_date, art_title, db_creds)
-
                 count += 1
 
             else:
@@ -306,8 +289,6 @@ def process_site_images(magazine_name, urls_list, name_host, owners, users, pswr
                 # download_images(dirname, urls, name_host, site_type[0])
                 data_to_db_social(urls, site_type[0], magazine_name, db_creds)
                 image_blob_to_db(magazine_name, site_type)
-                # send_to_db(urls, magazine_name, owners, credit, metadata, host_urls, img_page_url, site_type,
-                # art_date, art_title, db_creds)
                 count += 1
 
 
