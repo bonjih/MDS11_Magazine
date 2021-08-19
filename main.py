@@ -3,6 +3,7 @@ import time
 from concurrent.futures import ThreadPoolExecutor
 from selenium.common.exceptions import TimeoutException
 import pymysql
+import cv2
 
 import get_main_site_bauer
 # import get_main_site_media
@@ -46,16 +47,21 @@ if __name__ == "__main__":  # only executes if imported as main file
     try:
         # add scrape calls here
         # multithread all scrapes
+        # added sleep cause pymsql can make simultaneous db connections (currently PyMySQL threadsafe = 1)
         run_io_tasks_in_parallel([
             #lambda: get_main_site_bauer.main(creds, db_creds),
+            time.sleep(3),
             # lambda: get_main_site_media.main(creds, db_creds), # TODO media site not complete, behind JS
-            lambda: get_social_img.call_facebook(creds, db_creds),
+            time.sleep(3),
+            #lambda: get_social_img.call_facebook(creds, db_creds),
 
             # TODO pinterest Vogue Australia needs work, when to stop, goes of forever. Need a stop date
             # TODO mostly fashion, need CV to detect clothes to reject image
             #lambda: get_social_img.call_pinterest(creds, db_creds),
+            time.sleep(3),
             # lambda: get_social_img.call_instagram(creds, db_creds),
-            # lambda: get_social_img.call_twitter(creds, db_creds),
+            time.sleep(3),
+            lambda: get_social_img.call_twitter(creds, db_creds),
         ])
 
         # TODO CV and NLP processing, more work is required to time the threading
@@ -87,4 +93,9 @@ if __name__ == "__main__":  # only executes if imported as main file
     except IndexError as e:  # need to chase this error down  - image_blob_to_db_main(mag_names, s_type) line 127  cursor.execute("SELECT img_url_id FROM images") line 223
         print(e)
         pass
+    except cv2.error as e:  # to catch cv2 errors line 205
+        print(e)
+        pass
 
+# below means there was no image for cv to process - line line 105 in db_manager.py
+# cv2.error: OpenCV(4.5.3) C:\Users\runneradmin\AppData\Local\Temp\pip-req-build-q3d_8t8e\opencv\modules\imgcodecs\src\loadsave.cpp:978: error: (-215:Assertion failed) !image.empty() in function 'cv::imencode'
