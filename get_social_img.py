@@ -16,7 +16,7 @@ from selenium.webdriver.support import expected_conditions as ec
 
 from save_img_to_dir import download_images, make_dir
 from process_config_json import get_configs_fb, get_configs_pint, get_configs_insta, get_configs_twit
-from db_manager import data_to_db_social
+from db_manager import data_to_db_social, image_blob_to_db
 
 
 def selenium_driver():
@@ -279,6 +279,7 @@ def process_site_images(magazine_name, urls_list, name_host, owners, users, pswr
             # make_dir(dirname)
             # download_images(dirname, urls, name_host, site_type[0])
             data_to_db_social(urls, site_type[0], magazine_name, db_creds)
+            image_blob_to_db(magazine_name, site_type[0])
             # send_to_db(urls, magazine_name, owners, credit, metadata, host_urls, img_page_url, site_type, art_date,
             #            art_title, db_creds)
 
@@ -287,10 +288,11 @@ def process_site_images(magazine_name, urls_list, name_host, owners, users, pswr
                 twitter_login = str(host_url_list[0]) + '/login'
                 h = Helper(users[0], pswrd[0], driver, twitter_login, site_type[0])
                 urls = h.run_me(urls_list[0], site_type[0])
-                dirname = 'imgs2/{}'.format(site_type[0])  # dir name needs to added to config.json
+                dirname = 'imgs2/{}'.format(site_type)  # dir name needs to added to config.json
                 # make_dir(dirname)
                 # download_images(dirname, urls, name_host, site_type[0])
                 data_to_db_social(urls, site_type[0], magazine_name, db_creds)
+                image_blob_to_db(magazine_name, site_type)
                 # send_to_db(urls, site_type[0], magazine_name, owners, credit, metadata, host_urls,  img_page_url,
                 # art_date, art_title, db_creds)
 
@@ -303,6 +305,7 @@ def process_site_images(magazine_name, urls_list, name_host, owners, users, pswr
                 # make_dir(dirname)
                 # download_images(dirname, urls, name_host, site_type[0])
                 data_to_db_social(urls, site_type[0], magazine_name, db_creds)
+                image_blob_to_db(magazine_name, site_type)
                 # send_to_db(urls, magazine_name, owners, credit, metadata, host_urls, img_page_url, site_type,
                 # art_date, art_title, db_creds)
                 count += 1
