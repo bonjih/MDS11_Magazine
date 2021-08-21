@@ -116,9 +116,10 @@ def get_names(df):
     counter = 0
 
     for count in range(0, len(df)):
+
         # for count in range(0,3):
         caption = (df.iloc[count]['Caption'])
-        # print(caption)
+
         url = (df.iloc[count]['URL'])
         N.append(url)
         doc = nlp(caption)
@@ -127,14 +128,13 @@ def get_names(df):
             l = (token.text, token.lemma_, token.pos_, token.tag_, token.dep_,
                  token.shape_, token.is_alpha, token.is_stop)
             table.add_row(l)
-
             if token.pos_ == 'PROPN':
                 credit.append(token.text)
 
         O.append(credit[counter])
         counter = counter + 1
         P.append(credit[counter])
-        counter = len(credit)
+        #counter = len(credit)
 
     df3 = pd.DataFrame(N, columns=['URL'])
     df4 = pd.DataFrame(O, columns=['First Name'])
@@ -144,11 +144,16 @@ def get_names(df):
 
 
 def main(db_creds):
-    dataset = get_nlp_data(db_creds)
-    dataset = tidy_up_caption(dataset)
-    dataset = inspect_caption(dataset)
-    df_slice_caption = slice_caption(dataset)
-    data = get_names(df_slice_caption)
+    dataset1 = get_nlp_data(db_creds)
+    dataset2 = tidy_up_caption(dataset1)
+    dataset3 = inspect_caption(dataset2)
+    df_slice_caption = slice_caption(dataset3)
+    data = get_names(df_slice_caption)  # only returns 29 rows due to hard code
+    fname = []
+    lname = []
 
     for index, row in data.iterrows():
-        data_to_db_nlp(row['First Name'], row['Surname'], db_creds)
+        fname.append(row['First Name'])
+        lname.append(row['Surname'])
+
+    data_to_db_nlp(fname, lname, db_creds)

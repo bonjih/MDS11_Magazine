@@ -73,10 +73,6 @@ def get_image_from_db_cv(db_cred):
 
 
 def data_roi_cv(img_blob, img_url_id):
-    # URL images ids are added to table 'cropped_images' using a trigger
-    # create trigger 'add_url_id_to_cropped_images' after update on 'image_data'
-    # FOR EACH ROW
-    # INSERT INTO cropped_images(img_url_id) VALUES(new.img_url_id)
 
     datetime = create_datetime()
 
@@ -112,19 +108,20 @@ except cv2.error as e:
 def data_to_db_nlp(fname, lname, db_cred):
     cursor, conn = db_connect(db_cred)
 
-    # URL images ids are added to table 'nlp_image_meta' using a trigger
-    # create trigger 'add_url_id_to_nlp' after update on 'image_data'
-    # FOR EACH ROW
-    # INSERT INTO nlp_image_meta(img_url_id) VALUES(new.img_url_id)
+    # select image url id for insert into the images table
+    cursor.execute("SELECT img_url_id FROM image_data")
+    img_url_id = cursor.fetchall()
+    img_url_id_list = [list(i) for i in img_url_id]
 
-    datetime = create_datetime()
+    for i in zip(fname, lname,img_url_id_list):
+        datetime = create_datetime()
 
-    # occasionally index error here
-    cursor.execute(
-        "INSERT INTO nlp_image_meta (fname, lname, datatime_img_url_scrapped)"
-        "VALUES(%s, %s, %s)", (fname, lname, datetime))
+        # occasionally index error here
+        cursor.execute(
+            "INSERT INTO nlp_image_meta (img_url_id, fname, lname, datetime_updated)"
+            "VALUES(%s, %s, %s, %s)", (i[2], i[0], i[1], datetime))
 
-    conn.commit()
+        conn.commit()
 
 
 try:
@@ -210,7 +207,7 @@ def image_blob_to_db(mag_names, s_type):
     for i, j in zip(img_url_id, img_url):
         img_url_id = i[0]
         img_url = j[0]
-        #print(img_url_id, s_type)
+        # print(img_url_id, s_type)
         image_page = requests.get(img_url)
         if image_page.status_code == 200:
             img_bin = url_to_image(img_url)
@@ -227,7 +224,7 @@ def image_blob_to_db(mag_names, s_type):
                     (img_url_id, m_name_id, s_type, img_bin))
             else:
                 pass
-                #print('skipping, img_url_id existing', img_url_id)
+                # print('skipping, img_url_id existing', img_url_id)
 
         conn.commit()
 
