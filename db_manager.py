@@ -68,7 +68,7 @@ def create_datetime():
 def get_image_from_db_cv(db_cred):
     cursor, conn = db_connect(db_cred)
     cursor.execute('SELECT img_url_id, img_url FROM image_data')
-    img_urls = cursor.fetchall()  # can return all links or one and call the db every time
+    img_urls = cursor.fetchall()
     return img_urls
 
 
@@ -113,7 +113,7 @@ def data_to_db_nlp(fname, lname, db_cred):
     img_url_id = cursor.fetchall()
     img_url_id_list = [list(i) for i in img_url_id]
 
-    for i in zip(fname, lname,img_url_id_list):
+    for i in zip(fname, lname, img_url_id_list):
         datetime = create_datetime()
 
         # occasionally index error here
@@ -125,7 +125,7 @@ def data_to_db_nlp(fname, lname, db_cred):
 
 
 try:
-    # TODO combine social and main into a single function
+    # TODO combine social and main into a single function/class
     def data_to_db_social(im_url, s_type, mag_names, db_cred):
         print(mag_names)
         cursor, conn = db_connect(db_cred)
@@ -203,8 +203,9 @@ def image_blob_to_db(mag_names, s_type):
     # select image url id for insert into the images table
     cursor.execute("SELECT img_url_id FROM image_data")
     img_url_id = cursor.fetchall()
+    img_url_id_list = [list(i) for i in img_url_id]
 
-    for i, j in zip(img_url_id, img_url):
+    for i, j in zip(img_url_id_list, img_url):
         img_url_id = i[0]
         img_url = j[0]
         # print(img_url_id, s_type)
@@ -212,7 +213,7 @@ def image_blob_to_db(mag_names, s_type):
         if image_page.status_code == 200:
             img_bin = url_to_image(img_url)
 
-            # a dumb way of adding eh img_url_ids, should use trigger
+            # a dumb way of adding img_url_ids, should use trigger/procedure
             # occasionally index error here
             cursor.execute("SELECT img_url_id FROM images")
             exits = cursor.fetchall()
