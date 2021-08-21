@@ -208,24 +208,29 @@ def image_blob_to_db(mag_names, s_type):
     for i, j in zip(img_url_id_list, img_url):
         img_url_id = i[0]
         img_url = j[0]
-        # print(img_url_id, s_type)
+        print(img_url_id, s_type)
         image_page = requests.get(img_url)
         if image_page.status_code == 200:
             img_bin = url_to_image(img_url)
 
             # a dumb way of adding img_url_ids, should use trigger/procedure
-            # occasionally index error here
-            cursor.execute("SELECT img_url_id FROM images")
-            exits = cursor.fetchall()
-            exits = check_id_exist(exits, img_url_id)
+            #occasionally index error here
+            cursor.execute(
+                "INSERT INTO images (img_url_id, mag_name_id, site_type, image)" "VALUES(%s, %s, %s, %s)",
+                (img_url_id, m_name_id, s_type, img_bin))
 
-            if exits is False:
-                cursor.execute(
-                    "INSERT INTO images (img_url_id, mag_name_id, site_type, image)" "VALUES(%s, %s, %s, %s)",
-                    (img_url_id, m_name_id, s_type, img_bin))
-            else:
-                pass
-                # print('skipping, img_url_id existing', img_url_id)
+            #
+            # cursor.execute("SELECT img_url_id FROM images")
+            # exits = cursor.fetchall()
+            # exits = check_id_exist(exits, img_url_id)
+            #
+            # if exits is False:
+            #     cursor.execute(
+            #         "INSERT INTO images (img_url_id, mag_name_id, site_type, image)" "VALUES(%s, %s, %s, %s)",
+            #         (img_url_id, m_name_id, s_type, img_bin))
+            # else:
+            #     pass
+            #     # print('skipping, img_url_id existing', img_url_id)
 
         conn.commit()
 
