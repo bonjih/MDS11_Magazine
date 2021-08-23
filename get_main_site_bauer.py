@@ -124,7 +124,7 @@ def get_images(driver, img_page_urls, host_urls, mag_names, owners, s_type):
                     credit.append(y.find('span').text)
 
             image_data_to_db_main(matches_img_url, mag_names, owners, metadata, credit, host_urls, img_page_url, s_type, art_date, art_title, db_creds)
-            image_blob_to_db(mag_names, s_type)
+            # image_blob_to_db(mag_names, s_type)
 
             # to save images to disk
             # dirname = 'imgs2/main_site'  # need to be added to config.json
@@ -150,6 +150,8 @@ def main(site_creds, db_cred):
 
         if owner == "bauer":
             get_all_urls(driver, links, m_name, owner, s_type)
+            print('adding blobs to db', s_type, m_name)
+            image_blob_to_db(m_name, s_type)
         else:
             pass
 

@@ -55,7 +55,6 @@ def get_roi(dilation_image, image, img_url_id):  # InputOutputArray only require
             roi = image[y:y + h, x:x + w]
             # cv2.imwrite('img_{}.png'.format(roi_number), roi)
             convert_to_binary(roi, img_url_id)
-            #data_roi_cv(roi)  # to db manager
             roi_number += 1
     return roi_number
 
