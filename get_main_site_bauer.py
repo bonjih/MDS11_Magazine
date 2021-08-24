@@ -10,7 +10,7 @@ from datetime import datetime
 
 from process_config_json import get_configs_main
 from save_img_to_dir import download_images, make_dir
-from db_manager import image_data_to_db_main, image_blob_to_db
+from db_manager import image_data_to_db, image_blob_to_db
 
 startTime = datetime.now()
 
@@ -122,8 +122,7 @@ def get_images(driver, img_page_urls, host_urls, mag_names, owners, s_type):
                     credit.append(None)
                 else:
                     credit.append(y.find('span').text)
-
-            image_data_to_db_main(matches_img_url, mag_names, owners, metadata, credit, host_urls, img_page_url, s_type, art_date, art_title, db_creds)
+            image_data_to_db(matches_img_url, mag_names, owners, metadata, credit, host_urls, img_page_url, s_type, art_date, art_title)
 
             # to save images to disk
             # dirname = 'imgs2/main_site'  # need to be added to config.json
@@ -131,11 +130,9 @@ def get_images(driver, img_page_urls, host_urls, mag_names, owners, s_type):
             # download_images(dirname, matches_img_url, mag_names, s_type)
 
 
-def main(site_creds, db_cred):
-    global db_creds
+def main(site_creds):
 
-    mag_name, urls, host_name, owners, site_type = get_configs_main(site_creds, db_cred)
-    db_creds = db_cred
+    mag_name, urls, host_name, owners, site_type = get_configs_main(site_creds)
 
     driver = selenium_driver()
     a = zip(urls, owners, mag_name, site_type)  # to filter bauer from news_life_media

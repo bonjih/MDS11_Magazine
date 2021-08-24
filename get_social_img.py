@@ -16,7 +16,7 @@ from selenium.webdriver.support import expected_conditions as ec
 
 from save_img_to_dir import download_images, make_dir
 from process_config_json import get_configs_fb, get_configs_pint, get_configs_insta, get_configs_twit
-from db_manager import data_to_db_social, image_blob_to_db
+from db_manager import image_data_to_db, image_blob_to_db
 
 
 def selenium_driver():
@@ -184,7 +184,7 @@ class Helper(object):
     ######################################################
 
     # TODO threshold 500 and persistence 120 make sure get all images, needs to be optimised depending on scroll length
-    def run_me(self, url, site_type, threshold=5, persistence=12, debug=False):
+    def run_me(self, url, site_type, threshold=5, persistence=6, debug=False):
         final_results = []
         previmages = []
         tries = 0
@@ -252,11 +252,18 @@ def get_url_host_name(urls_list):
     return host_url
 
 
-def process_site_images(magazine_name, urls_list, name_host, owners, users, pswrd, site_type, db_creds):
+def process_site_images(magazine_name, urls_list, name_host, owners, users, pswrd, site_type):
     global h
     host_url_list = get_url_host_name(urls_list)
     driver = selenium_driver()
     count = 0
+
+    credited = []
+    metadatas = []
+    host_urls = []
+    img_page_urls = []
+    art_date = []
+    art_title = []
 
     for magazine_name, urls_list, name_host, owners, users, pswrd, site_type in zip(magazine_name, urls_list, name_host,
                                                                                     owners, users, pswrd, site_type):
@@ -266,7 +273,9 @@ def process_site_images(magazine_name, urls_list, name_host, owners, users, pswr
             dirname = 'imgs2/{}'.format(site_type[0])  # dir name needs to added to config.json
             # make_dir(dirname)
             # download_images(dirname, urls, name_host, site_type[0])
-            data_to_db_social(urls, site_type[0], magazine_name, db_creds)
+            image_data_to_db(urls, site_type[0], magazine_name, owners, credited, metadatas, host_urls, img_page_urls, art_date, art_title)
+
+            print('adding blobs to db',site_type[0], magazine_name)
             image_blob_to_db(magazine_name, site_type[0])
 
         elif count == 0:
@@ -277,7 +286,8 @@ def process_site_images(magazine_name, urls_list, name_host, owners, users, pswr
                 dirname = 'imgs2/{}'.format(site_type)  # dir name needs to added to config.json
                 # make_dir(dirname)
                 # download_images(dirname, urls, name_host, site_type[0])
-                data_to_db_social(urls, site_type[0], magazine_name, db_creds)
+                image_data_to_db(urls, site_type[0], magazine_name, owners, credited, metadatas, host_urls, img_page_urls, art_date, art_title)
+                print('adding blobs to db', site_type[0], magazine_name)
                 image_blob_to_db(magazine_name, site_type)
                 count += 1
 
@@ -287,27 +297,29 @@ def process_site_images(magazine_name, urls_list, name_host, owners, users, pswr
                 dirname = 'imgs2/{}'.format(site_type[0])  # dir name needs to added to config.json
                 # make_dir(dirname)
                 # download_images(dirname, urls, name_host, site_type[0])
-                data_to_db_social(urls, site_type[0], magazine_name, db_creds)
+                image_data_to_db(urls, site_type[0], magazine_name, owners, credited, metadatas, host_urls, img_page_urls, art_date, art_title)
+                print('adding blobs to db', site_type[0], magazine_name)
                 image_blob_to_db(magazine_name, site_type)
                 count += 1
 
 
 # for multithread
-def call_facebook(site_creds, db_creds):
+def call_facebook(site_creds):
     magazine_name, urls_list, name_host, owners, users, pswrd, site_type = get_configs_fb(site_creds)
-    process_site_images(magazine_name, urls_list, name_host, owners, users, pswrd, site_type, db_creds)
+    process_site_images(magazine_name, urls_list, name_host, owners, users, pswrd, site_type)
 
 
-def call_pinterest(site_creds, db_creds):
+def call_pinterest(site_creds):
     magazine_name, urls_list, name_host, owners, users, pswrd, site_type = get_configs_pint(site_creds)
-    process_site_images(magazine_name, urls_list, name_host, owners, users, pswrd, site_type, db_creds)
+    process_site_images(magazine_name, urls_list, name_host, owners, users, pswrd, site_type)
 
 
-def call_instagram(site_creds, db_creds):
+def call_instagram(site_creds):
     magazine_name, urls_list, name_host, owners, users, pswrd, site_type = get_configs_insta(site_creds)
-    process_site_images(magazine_name, urls_list, name_host, owners, users, pswrd, site_type, db_creds)
+    process_site_images(magazine_name, urls_list, name_host, owners, users, pswrd, site_type)
 
 
-def call_twitter(site_creds, db_creds):
+def call_twitter(site_creds):
     magazine_name, urls_list, name_host, owners, users, pswrd, site_type = get_configs_twit(site_creds)
-    process_site_images(magazine_name, urls_list, name_host, owners, users, pswrd, site_type, db_creds)
+    process_site_images(magazine_name, urls_list, name_host, owners, users, pswrd, site_type)
+

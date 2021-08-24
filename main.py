@@ -5,11 +5,12 @@ from selenium.common.exceptions import TimeoutException
 import pymysql
 import cv2
 
+import db_manager
 import get_main_site_bauer
 # import get_main_site_media
 import cv_processing_crop
 import get_social_img
-import nlp_search
+import nlp_name_search
 import img_reverse_search_DEV
 import nlp_imagescrape_tineye
 
@@ -24,13 +25,6 @@ def cred_json_parser():
         return data
 
 
-# db credentials
-def db_cred_json_parser():
-    with open('config_creds_db.json', 'r') as jsonFile2:
-        db_credentials = json.load(jsonFile2)
-        return db_credentials
-
-
 # parallel downloads
 def run_io_tasks_in_parallel(tasks):
     with ThreadPoolExecutor() as executor:
@@ -42,31 +36,32 @@ def run_io_tasks_in_parallel(tasks):
 if __name__ == "__main__":  # only executes if imported as main file
 
     creds = cred_json_parser()
-    db_creds = db_cred_json_parser()
+    # db_creds = db_cred_json_parser()
+    db_manager.db_cred_json_parser()
 
     try:
         # add scrape calls here
         # multithread all scrapes
         # added sleep cause pymsql can make simultaneous db connections (currently PyMySQL threadsafe = 1)
         run_io_tasks_in_parallel([
-            #lambda: get_main_site_bauer.main(creds, db_creds),
-            time.sleep(3),
-            # lambda: get_main_site_media.main(creds, db_creds), # TODO media site not complete, behind JS
-            time.sleep(3),
-            #lambda: get_social_img.call_facebook(creds, db_creds),
+            lambda: get_main_site_bauer.main(creds),
+            # time.sleep(3),
+            # lambda: get_main_site_media.main(creds), # TODO media site not complete, behind JS
+            # time.sleep(3),
+            # lambda: get_social_img.call_facebook(creds),
 
             # TODO pinterest Vogue Australia needs work, when to stop, goes of forever. Need a stop date
             # TODO mostly fashion, need CV to detect clothes to reject image
-            #lambda: get_social_img.call_pinterest(creds, db_creds),
-            time.sleep(3),
-            # lambda: get_social_img.call_instagram(creds, db_creds),
-            time.sleep(3),
-            lambda: get_social_img.call_twitter(creds, db_creds),
+            # lambda: get_social_img.call_pinterest(creds),
+            # time.sleep(3),
+            # lambda: get_social_img.call_instagram(creds),
+            # time.sleep(3),
+            #lambda: get_social_img.call_twitter(creds),
         ])
 
         # TODO CV and NLP processing, more work is required to time the threading
         # cv_processing_crop.main(db_creds)
-        # nlp_search.main(db_creds)
+        # nlp_name_search.main(db_creds)
         # img_reverse_search_DEV.main(db_creds)
         # nlp_imagescrape_tineye.main()
 
@@ -74,7 +69,8 @@ if __name__ == "__main__":  # only executes if imported as main file
         print("Wait timeout, check 'WebDriverWait(driver, n)' in Class Helper. Error: {}".format(e))
     except pymysql.OperationalError as e:
         print(
-            'No connection to database. Please check connection details in config.json or database connection: {}'.format(e))
+            'No connection to database. Please check connection details in config.json or database connection: {}'.format(
+                e))
         pass
     except pymysql.DataError as e:
         print('Data too long, check variable length in database : {}'.format(e))
