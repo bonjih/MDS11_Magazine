@@ -125,13 +125,12 @@ def get_configs_twit(site_creds):
     return magazine_name, urls_list, name_host, owners, users, pswrd, site_type
 
 
-def get_configs_main(site_creds, db_access):
+def get_configs_main(site_creds):
     #global db_creds  # to test connect
     urls_list = []
     magazine_name = []
     name_host = []
     owners = []
-    #db_creds = []
     site_type = []
 
     for key, values in site_creds.items():
